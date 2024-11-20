@@ -1,0 +1,39 @@
+{
+  "name": "verbit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "clean": "rm dist/bundle.js",
+    "serve": "webpack serve --mode development",
+    "dev": "webpack --mode development",
+    "watch": "webpack --watch --mode development",
+    "prod": "webpack --mode production"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.4.14"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "browser-sync-webpack-plugin": "^2.3.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.1",
+    "postcss-loader": "^8.1.1",
+    "prettier": "^3.3.3",
+    "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.3",
+    "webpack": "^5.95.0",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-manifest-plugin": "^5.0.0"
+  }
+}
