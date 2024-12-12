@@ -29,20 +29,12 @@
                                 <h2 class="font-extrabold text-[40px] leading-[100%] mb-[12px] max-md:text-center max-md:mb-[36px]"><?php echo esc_html( $title ); ?></h2>
                                 <div class="flex flex-col gap-1 pb-[12px]">
                                     <h3 class="font-bold text-sm leading-[18px] -tracking-[0.17px]">Signed in as</h3>
-                                    
-                                    <?php
-                                    if ( isset($_SESSION['roles']) && in_array("registered", $_SESSION['roles']) ) :
-                                        $email = $_SESSION['email'] ?? '';
-                                    ?>
-                                    
-                                    <a href="#" class="text-sm leading-[18px] -tracking-[0.17px] !text-[#041D34A6]"><?php echo esc_html( $email ); ?>@gmail.com</a>
-                                    
-                                    <?php endif; ?>
-
+                                    <a href="#" class="text-sm leading-[18px] -tracking-[0.17px] !text-[#041D34A6]" id="cardholder-email"></a>
                                 </div>
                             </div>
                             <div class="flex items-center gap-x-[16px] mb-8 max-md:flex-col max-md:gap-[14px] max-md:mb-0" data-checkout="form">
                                 <form action="" class="w-full">
+                                    <div id="card-result" class="text-sm text-[#d11f1f] text-left mb-2"></div>
                                     <div class="flex flex-col">
                                         <div class="mb-[16px]">
                                             <a href="" class="!text-[#0570DE] flex items-center justify-center gap-x-[7px] font-sfpro600[box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#0570DE] !py-[14px] !px-[12px] font-[600]">
@@ -53,31 +45,40 @@
                                         <div class="flex flex-col gap-2.5 mb-[24px]">
                                             <div class="flex gap-2.5">
                                                 <div class="flex flex-col flex-grow">
-                                                    <label for="firstname" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">First name</label>
-                                                    <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !px-[12px]" placeholder="John">
+                                                    <label for="cardholder-firstname" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">First name</label>
+                                                    <input type="text" name="firstname" id="cardholder-firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] !border-2 !border-[#E0E0E0] !py-[14px] !px-[12px]" value="" placeholder="">
                                                 </div>
                                                 <div class="flex flex-col flex-grow">
-                                                    <label for="firstname" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">Last name</label>
-                                                    <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !px-[12px]" placeholder="Due">
+                                                    <label for="cardholder-lastname" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">Last name</label>
+                                                    <input type="text" name="lastname" id="cardholder-lastname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] !border-2 !border-[#E0E0E0] !py-[14px] !px-[12px]" value="" placeholder="">
                                                 </div>
                                             </div>
                                             <div class="flex gap-2.5">
                                                 <div class="relative flex flex-col flex-grow">
-                                                    <label for="firstname" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">Card number</label>
-                                                    <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !pl-[12px] !pr-[136px]" placeholder="1234 1234 1234 1234">
-                                                    <img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/banks.png" class="absolute top-[65%] right-[12px] -translate-y-2/4" alt="banks">
+                                                    <label for="card-number" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">Card number</label>
+                                                    <div id="card-number" class="font-sfpro600 !border-2 !border-[#E0E0E0] !rounded-[6px] [box-shadow:0px_2px_4px_0px_#00000012] !py-[14px] !pl-[12px] !pr-[136px]"></div>
+                                                   <!--  <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !pl-[12px] !pr-[136px]" placeholder="1234 1234 1234 1234">
+                                                    <img src="<!?php echo get_template_directory_uri(); ?>/src/assets/img/banks.png" class="absolute top-[65%] right-[12px] -translate-y-2/4" alt="banks"> -->
                                                 </div>
                                             </div>
                                             <div class="flex gap-2.5">
                                                 <div class="flex flex-col flex-grow">
-                                                    <label for="firstname" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">Expiration</label>
-                                                    <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !px-[12px]" placeholder="MM / YY">
+                                                    <label for="card-expiry" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">Expiration</label>
+                                                    <div id="card-expiry" class="font-sfpro600 !border-2 !border-[#E0E0E0] !rounded-[6px] [box-shadow:0px_2px_4px_0px_#00000012] !py-[14px] !px-[12px]"></div>
+                                                    <!-- <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !px-[12px]" placeholder="MM / YY"> -->
                                                 </div>
                                                 <div class="flex flex-col flex-grow">
-                                                    <label for="firstname" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">CVV</label>
-                                                    <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !px-[12px]" placeholder="CVV">
+                                                    <label for="card-cvc" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">CVV</label>
+                                                    <div id="card-cvc" class="font-sfpro600 !border-2 !border-[#E0E0E0] !rounded-[6px] [box-shadow:0px_2px_4px_0px_#00000012] !py-[14px] !px-[12px]"></div>
+                                                    <!-- <input type="text" name="firstname" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !px-[12px]" placeholder="CVV"> -->
                                                 </div>
                                             </div>
+                                            <!-- <div class="flex gap-2.5">
+                                                <div class="relative flex flex-col flex-grow">
+                                                    <label for="cardholder-zipcode" class="font-sfpro600 text-[#4F5B76] text-[13px] leading-[16px] mb-1 font-[600]">ZIP Code</label>
+                                                    <input type="text" name="zipcode" id="cardholder-zipcode" class="font-sfpro600 [box-shadow:0px_2px_4px_0px_#00000012] h-[43px] !rounded-[6px] border-2 border-[#E0E0E0] !py-[14px] !pl-[12px] !pr-[136px]" placeholder="1234">
+                                                </div>
+                                            </div> -->
                                         </div>
 
                                         
@@ -108,7 +109,7 @@
                                 </form>
                             </div>
                             <div class="flex items-center gap-[32px] max-md:fixed max-md:bg-white max-md:py-[21px] max-md:px-[17px] max-md:inset-x-0 max-md:bottom-0 max-md:[box-shadow:0px_-1px_14px_0px_#0000001A] max-md:backdrop-filter backdrop-blur-[10px] max-md:z-10 max-md:justify-center max-md:gap-0">
-
+                                
                                 <?php 
                                 if ( have_rows( 'payment_buttons' ) ) :
                                     while ( have_rows( 'payment_buttons' ) ) : the_row();
@@ -135,8 +136,14 @@
                                             $start_button_target = $start_button[ 'target' ] ? $start_button[ 'target' ] : '_self';
                                             ?>
 
-                                            <a href="<?php echo esc_url( $start_button_url ); ?>" target="<?php echo esc_attr( $start_button_target ); ?>" class="inline-block bg-primary !text-white text-center text-lg leading-[38px] py-[7px] px-2.5 min-w-[160px] w-fit rounded-[56px] font-bold max-md:min-w-0 max-md:px-[26px]"><?php echo esc_html( $start_button_title ); ?></a>
-                                    
+                                            <div class="relative">
+                                                <button id="card-button" class="min-h-[52px] !border-0 inline-block bg-primary disabled:bg-[#5148f9c2] !text-white text-center text-lg leading-[38px] py-[7px] px-2.5 min-w-[160px] w-fit rounded-[56px] font-bold max-md:min-w-0 max-md:px-[26px]"><span><?php echo esc_html( $start_button_title ); ?></span></button>
+                                                <div class="circle-loader hidden"></div>
+                                                <div class="success-check-indicator hidden absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 filter invert-[100%] brightness-200 w-[18px]">
+                                                    <img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/success-payment-check-indicator.png" alt="checkmark">
+                                                </div>
+                                            </div>
+
                                         <?php
                                         endif;
                                     endwhile;
@@ -151,98 +158,16 @@
                 </div>
             </div>
             <div class="bg-[#F6F6FF] h-screen max-w-[517px] w-full pt-[130px] pl-[64px] max-md:px-2.5 max-md:py-[24px] max-lg:px-5 max-md:rounded-none max-md:max-w-full max-md:mt-[45px] max-md:min-h-0 max-md:h-auto max-md:pb-[142px]" data-checkout="free-trial">
-                <div class="flex flex-col max-w-[390px] w-full gap-3 bg-white rounded-[20px] p-[30px] max-md:px-[19px] max-md:max-w-full">
-                    <div class="flex flex-wrap items-center gap-[13px] border-b border-[#041D34] border-opacity-[10%] pb-1">
-                        <h2 class="font-bold text-[#041D34] text-[22px] leading-[34px] -tracking-[0.38px]">Summary</h2>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <h2 class="font-bold leading-[34px] -tracking-[0.38px]">Verbit business</h2>
-                            <a href="#" class="underline !text-[#000000A6] leading-[34px] -tracking-[0.38px]">7 -day free trial</a>
-                        </div>
-                        <div>
-                            <h3 class="mb-[15px] text-sm leading-[34px] -tracking-[0.17px] text-[#041D34A6]">Subscription</h3>
-                            <div class="flex items-center justify-between mb-[20px]">
-                                <input type="hidden" id="previous-selected-plan" value="">
-                                <?php
-                                $monthly_product_id = 1310; // Monthly Plan
-                                $yearly_product_id = 1312; // Yearly Plan
-                                $monthly_product = wc_get_product($monthly_product_id);
-                                $yearly_product = wc_get_product($yearly_product_id);
+                <div class="max-w-[390px] bg-white rounded-[20px] p-[30px] max-md:px-[19px] max-md:max-w-full">
 
-                                switch ($monthly_product_id) {
-                                    case 1310:     
-                                        break;
-                                    
-                                    default:
-                                        break;
-                                }
-                                ?>
+                    <?php 
+                    if (isset($_GET['plan']) && ($_GET['plan'] === 'business')) {
+                        get_template_part( 'src/blocks/layouts/pages/checkout/subscription-summary' );
+                    } else {
+                        get_template_part( 'src/blocks/layouts/pages/checkout/one-time-summary' );
+                    }
+                    ?>
 
-                                <div class="relative flex justify-between items-center">
-                                    <a href="#" class="peer !text-[#041D34A6] border-[1.33px] border-[#5C6C7B33] rounded-[4px] relative py-[4px] pl-[11px] pr-[24px] -tracking-[0.17px] leading-[31px] min-w-[77px] w-full">
-                                        <span class="absolute top-2/4 right-[11px] -translate-y-2/4"><svg width="7" height="5" viewBox="0 0 7 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.80441 3.81766L6.19494 1.42713C6.61491 1.00716 6.31747 0.289062 5.72353 0.289062H0.942484C0.348547 0.289062 0.0511014 1.00716 0.471078 1.42713L2.8616 3.81766C3.12195 4.07801 3.54406 4.07801 3.80441 3.81766Z" fill="#696969"/></svg></span>
-                                        Monthly
-                                    </a>
-                                    <ul class="hidden peer-hover:block absolute left-0 top-[111%] min-w-[175px] rounded-[4px] border-[1.33px] border-[#5C6C7B33] [box-shadow:0px_4px_24px_0px_#00000014] z-10 bg-white">
-                                        <li class="p-2.5 w-full cursor-pointer bg-[#F5F5F5] hover:bg-[#F5F5F5]">
-                                            <div class="relative mb-2">
-                                                <h2 class="font-bold leading-[84%] -tracking-[0.38px]">Monthly</h2>
-                                                <span class="absolute right-0 top-0 bg-primary rounded-full flex items-center justify-center w-[13px] h-[13px] max-md:top-[12px]"><svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.746826 2.85156L2.62024 4.85156L6.36708 0.851562" stroke="white"/></svg></span>
-                                            </div>
-                                            <p class="text-sm leading-[84%] -tracking-[0.17px] text-[#000000A6]">$30/mo</p>
-                                        </li>
-                                        <li class="p-2.5 w-full cursor-pointer hover:bg-[#F5F5F5]">
-                                            <div class="relative mb-2">
-                                                <h2 class="font-bold leading-[84%] -tracking-[0.38px]">Yearly</h2>
-                                            </div>
-                                            <p class="text-sm leading-[84%] -tracking-[0.17px] text-[#000000A6]">$228/yr (billed upfront)</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <p class="leading-[34px] -tracking-[0.38px] text-[#041D34A6]">$29/month</p>
-                            </div>
-                            <div class="relative flex justify-between items-center mb-[20px]">
-                                <input type="text" name="coupon" class="peer text-[#00000080] !py-[17px] !pl-[10px] !pr-[55px] !rounded-[6px] border !border-transparent w-full underline focus:outline-none focus:!border-primary focus:no-underline" placeholder="Enter Coupon">
-                                <a href="#" class="hidden peer-focus:block absolute right-2.5 top-2/4 -translate-y-2/4 font-[500] !text-primary text-sm leading-[34px] -tracking-[0.17px]">Apply</a>
-                            </div>
-                            <div class="mb-[130px] max-md:mb-[111px]">
-                                <div class="flex items-center justify-between border-b border-black border-opacity-[20%] pb-2 mb-[15px]">
-                                    <h3 class="text-sm leading-[34px] -tracking-[0.17px] text-[#00000080]">Subtotal</h3>
-                                    <p class="leading-[38px] -tracking-[0.38px] text-[#000000A6]">$29/month</p>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <h2 class="font-bold text-[22px] leading-[34px] -tracking-[0.38px]">Total due today</h2>
-                                    <p class="font-bold text-[22px] leading-[34px] -tracking-[0.38px]">$0/month</p>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-sm leading-[34px] -tracking-[0.17px] text-[#000000A6]">*after your 7-day free trial, on Sept 8th</h3>
-                                    <p class="text-sm leading-[34px] -tracking-[0.17px] text-[#000000A6]">$29/month</p>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="border-b border-black border-opacity-[20%] mb-[12px]">
-                                    <h2 class="font-bold leading-[28px] -tracking-[0.38px]">Terms & conditions</h2>
-                                </div>
-                                <div>
-                                    <ul class="flex flex-col p-0 text-left gap-1">
-                                        <li class="text-xs relative py-[7px] pl-[21px] text-[#041D34A6] leading-[130%] -tracking-[0.17px] max-md:leading-6 max-md:pl-[19px]">
-                                            <span class="absolute left-0 top-2 bg-primary rounded-full flex items-center justify-center w-[13px] h-[13px] max-md:top-[12px]"><svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.395264 2.85156L2.26868 4.85156L6.01552 0.851562" stroke="white"/></svg></span>
-                                            Billing will automatically begin once the free trial ends.
-                                        </li>
-                                        <li class="text-xs relative py-[7px] pl-[21px] text-[#041D34A6] leading-[130%] -tracking-[0.17px] max-md:leading-6 max-md:pl-[19px]">
-                                            <span class="absolute left-0 top-2 bg-primary rounded-full flex items-center justify-center w-[13px] h-[13px] max-md:top-[12px]"><svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.395264 2.85156L2.26868 4.85156L6.01552 0.851562" stroke="white"/></svg></span>
-                                            Cancel before the free trial ends to avoid any charges.
-                                        </li>
-                                        <li class="text-xs relative py-[7px] pl-[21px] text-[#041D34A6] leading-[130%] -tracking-[0.17px] max-md:leading-6 max-md:pl-[19px]">
-                                            <span class="absolute left-0 top-2 bg-primary rounded-full flex items-center justify-center w-[13px] h-[13px] max-md:top-[12px]"><svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.395264 2.85156L2.26868 4.85156L6.01552 0.851562" stroke="white"/></svg></span>
-                                            We will send you a reminder 48hrs before your trial ends.
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

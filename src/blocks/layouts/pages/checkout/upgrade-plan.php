@@ -74,27 +74,29 @@
                                             <p class="text-sm -tracking-[0.38px] leading-[14px] text-[#041D3480] py-2"><?php echo esc_html( $balance ); ?> <strong>5 hours</strong></p>
                                             <p class="text-[#041D34] text-sm leading-[14px] -tracking-[0.38px]"><?php echo esc_html( $description ); ?></p>
                                         </div>
-                                        <div class="relative w-fit">
-                                            <select name="plan-package" id="hourly-plan" class="text-primary border-[1.33px] border-[#5148F933] rounded-[1.33px] relative py-[7px] px-[11px] pr-8 -tracking-[0.17px] leading-[23px]">
+
+                                        <?php get_template_part( 'src/blocks/components/hours-dropdown' ); ?>
+                                        <!-- <div class="relative w-fit">
+                                            <select name="plan-package" id="hourly-plan" data-plan="1338" class="text-primary border-[1.33px] border-[#5148F933] rounded-[1.33px] relative py-[7px] px-[11px] pr-8 -tracking-[0.17px] leading-[23px]">
                                                 <option value="" disabled selected>Add Hours</option>
     
-                                                <?php 
+                                                <!?php 
                                                 if ( have_rows( 'package' ) ) :
                                                     while ( have_rows( 'package' ) ) : the_row();
                                                     
                                                     $hour = get_sub_field( 'hour' );
                                                     ?>
     
-                                                    <option value="<?php echo $hour; ?>"><?php echo $hour; ?></option>
+                                                    <option value="<!?php echo $hour; ?>"><!?php echo $hour; ?></option>
     
-                                                    <?php 
+                                                    <!?php 
                                                     endwhile;
                                                 endif; ?>
     
                                             </select>
 
                                             <span class="absolute top-2/4 right-[5px] -translate-y-2/4 bg-white p-2"><svg width="7" height="5" viewBox="0 0 7 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.80441 3.81766L6.19494 1.42713C6.61491 1.00716 6.31747 0.289062 5.72353 0.289062H0.942484C0.348547 0.289062 0.0511014 1.00716 0.471078 1.42713L2.8616 3.81766C3.12195 4.07801 3.54406 4.07801 3.80441 3.81766Z" fill="#5148F9"/></svg></span>
-                                        </div>
+                                        </div> -->
 
                                         <!-- <a href="#" class="text-primary border-[1.33px] border-[#5148F933] rounded-[1.33px] relative py-[7px] px-[11px] pr-8 -tracking-[0.17px] leading-[23px]">
                                             <span class="absolute top-2/4 right-[11px] -translate-y-2/4"><svg width="7" height="5" viewBox="0 0 7 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.80441 3.81766L6.19494 1.42713C6.61491 1.00716 6.31747 0.289062 5.72353 0.289062H0.942484C0.348547 0.289062 0.0511014 1.00716 0.471078 1.42713L2.8616 3.81766C3.12195 4.07801 3.54406 4.07801 3.80441 3.81766Z" fill="#5148F9"/></svg></span>

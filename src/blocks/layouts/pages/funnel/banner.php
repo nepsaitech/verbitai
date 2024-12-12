@@ -9,7 +9,7 @@
                     </div>
                     <div>
                         <label for="file" class="text-xs leading-[11px] font-bold text-white block -mb-1">Upload</label>
-                        <progress id="file" value="32" max="100">32%</progress>
+                        <progress id="file" value="50" max="100">50%</progress>
                     </div>
                     <div>
                         <label for="file" class="text-xs leading-[11px] font-normal text-[#FFFFFF66] block -mb-1">Complete Order</label>

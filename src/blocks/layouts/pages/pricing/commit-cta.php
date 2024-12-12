@@ -31,6 +31,7 @@
                             <?php endif; ?>
 
                             <div>
+                                <input type="hidden" id="js-hourly-plan" value="<?php echo $hourly_product_id; ?>">
                                 <h2 class="text-[22px] text-[#041D34] leading-[34px] -tracking-[0.38px] font-bold"><?php echo esc_html( $hourly_title ); ?></h2>
                                 <div class="text-sm text-[#041D34A5] leading-[26px] max-md:leading-[21px] max-md:max-w-[286px] mx-auto"><?php echo $hourly_subtitle; ?></div>
                             </div>
@@ -48,7 +49,7 @@
                                 $hourly_button_target = $hourly_button[ 'target' ] ? $hourly_button[ 'target' ] : '_self';
                                 ?>
 
-                                <a href="<?php echo esc_url( $hourly_button_url ); ?>" target="<?php echo esc_attr( $hourly_button_target ); ?>" class="flex-[1_0_auto] bg-white !text-[#032086] text-center text-lg leading-[38px] p-[7px] rounded-[40px] font-bold w-full max-w-[180px] [box-shadow:0px_7px_8px_0px_#5148F91A] js-hourly-plan"><?php echo esc_html( $hourly_button_title ); ?></a>
+                                <a href="<?php echo esc_url( $hourly_button_url ); ?>" target="<?php echo esc_attr( $hourly_button_target ); ?>" class="flex-[1_0_auto] bg-white !text-[#032086] text-center text-lg leading-[38px] p-[7px] rounded-[40px] font-bold w-full max-w-[180px] [box-shadow:0px_7px_8px_0px_#5148F91A] js-hourly-plan-btn"><?php echo esc_html( $hourly_button_title ); ?></a>
 
                             <?php endif; ?>
 

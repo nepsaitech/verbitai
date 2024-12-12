@@ -4,7 +4,7 @@
             <div class="flex justify-end gap-[34px]">
                 <div class="flex-[1_0_auto] relative max-w-[920px] w-full bg-white shadow-[0px_7px_8px_0px_#5148F91A] rounded-[20px] p-10 pb-[257px] max-sm:pt-[18px] max-sm:px-[26px] max-[1050px]:max-w-full max-[1320px]:max-w-[70%]">
                     <div class="border-b border-solid border-[#0000000D]">
-                        <h1 class="font-bold text-[30px] text-[#303030] leading-9 mb-[5px] max-sm:text-[22px] max-sm:mb-[1px]">What is a podcast?</h1>
+                        <h1 id="smart-player-title" class="font-bold text-[30px] text-[#303030] leading-9 mb-[5px] max-sm:text-[22px] max-sm:mb-[1px]">What is a podcast?</h1>
                         <div class="flex items-center gap-4 mb-10 max-sm:mb-6">
                             <div class="flex items-center gap-[6px]">
                                 <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">

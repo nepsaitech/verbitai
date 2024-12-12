@@ -154,7 +154,7 @@ if ("true" === questionsSubmitted) {
     renderDSQuestion(dsCurrentIndex);
 }
 
-function transcriptProcessHTML() {
+/* function transcriptProcessHTML() {
     const sampleReady = localStorage.getItem('jobStatus');
 
     if ("completed" === sampleReady) {
@@ -188,8 +188,115 @@ function transcriptProcessHTML() {
         })
         .catch(error => console.error("Error:", error));
     }
-}
+} 
 
 document.addEventListener('DOMContentLoaded', async () => {
     transcriptProcessHTML();
-});
+}); */
+
+
+// Send AJAX request to notify WordPress to send an email
+function sendSampleReadyEmail() {
+    fetch(`${window.location.origin}/wp-admin/admin-ajax.php?action=send_sample_ready_email`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            email: 'enadnep@gmail.com'
+        }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Email sent successfully.");
+            } else {
+                console.error("Failed to send email:", data.message);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+}
+
+// Dummy Mock Test for file status (for testing when the real API is not available)
+const mockStatusResponse = {
+    content: {
+        status: "in-progress", // Change this to "in-process" to simulate different scenarios
+    },
+};
+
+// Simulate a delay like an actual API call
+const simulateStatusCheck = async () => {
+    return new Promise<any>((resolve) => {
+        setTimeout(() => {
+            console.log("Mocked Job Status:", mockStatusResponse.content.status);
+            resolve(mockStatusResponse);
+        }, 1000); // Simulate a 2-second delay for the API response
+    });
+};
+
+// Polling to check upload status
+import { fetchWithAuth } from '../../api/fetchWithAuth';
+
+window.onload = async () => {
+    const jobID = localStorage.getItem("vb_job_id");
+    const transcriptWrap = document.querySelector(".js-transcription-wrap") as HTMLElement;
+
+    const mediaName = localStorage.getItem("vb_media_name");
+
+    const updateMediaName = () => {
+        const mediaNameEl = document.getElementById("media-filename");
+        if (mediaName && mediaNameEl) {
+            mediaNameEl.textContent = mediaName;
+        }
+    };
+
+    const checkStatus = async () => {
+        /* const jobApi = `https://self-service-staging.verbit.co/api/v1/job/check?job_id=${jobID}`;
+        const jobResponse = await fetchWithAuth(jobApi);
+
+        if (!jobResponse.ok) {
+            console.error("Failed to fetch status:", jobResponse.status);
+            return;
+        }
+
+        const jobData = await jobResponse.json(); */
+        
+        const isCompleted = localStorage.getItem("vb_job_completed");
+        if (isCompleted === "true") {
+            console.log("Processing already completed. Skipping polling.");
+            transcriptWrap.innerHTML = dsSampleReady;
+            return;
+        }
+
+        const statusResponse = await simulateStatusCheck();
+        const { status } = statusResponse.content;
+        
+        // Log to verify polling interval
+        console.log("Job Status:", status);
+        console.log("Polling... Next check in 5 seconds");
+
+        if (status === "complete") {
+            console.log("File processing complete!");
+            transcriptWrap.innerHTML = dsSampleReady;
+            updateMediaName();
+            /* sendSampleReadyEmail(); */
+            localStorage.setItem("vb_job_completed", "true");
+            clearInterval(statusInterval);
+        } else if (status === "in-progress") {
+            transcriptWrap.innerHTML = dsTranscripting;
+            updateMediaName();
+            console.log("File is still being processed...");
+        }
+    };
+
+    updateMediaName();
+
+    // Start polling every 3 seconds
+    const statusInterval = setInterval(checkStatus, 3000);
+
+    // Change status to "complete" after 8 seconds for testing
+    setTimeout(() => {
+        mockStatusResponse.content.status = "complete";
+    }, 10000);
+}

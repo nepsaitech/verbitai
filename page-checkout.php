@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Checkout
+Template Name: Checkout Page
 Template Post Type: page
 */
 

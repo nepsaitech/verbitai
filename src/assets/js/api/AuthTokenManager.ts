@@ -1,9 +1,8 @@
-/* Manages the token (store, retrieve, remove) */
+import { ErrorMessages } from '../classes/errorMessages';
+
 export class AuthTokenManager {
     private static instance: AuthTokenManager;
-    private tokenKey: string = 'authToken';
-  
-    private constructor() {}
+    private tokenKey: string = 'vb_token';
   
     public static getInstance(): AuthTokenManager {
       if (!AuthTokenManager.instance) {
@@ -17,44 +16,41 @@ export class AuthTokenManager {
     }
   
     public getToken(): string | null {
-      return localStorage.getItem(this.tokenKey);
+        return this.validateToken().result || null;
     }
     
     public removeToken(): void {
         localStorage.removeItem(this.tokenKey);
     }
-  
-    // Check if the token is valid by comparing expiration time
-    public isTokenValid(): boolean | null {
+    
+    public validateToken(): { isValid: boolean; result?: string } {
         const token = localStorage.getItem(this.tokenKey);
-        if (token) {
-            const payload = this.decodeToken(token);
-            if (payload.exp) {
-                const currentTime = 1731569704; // Current time in seconds sample: Math.floor(Date.now() / 1000)
-                if (currentTime < payload.exp) {
-                    return true;  // Token is valid if current time is less than expiration
-                } else {
-                    console.warn("Token has expired.");
-                    return false;  // Token has expired
-                }
-            }
+
+        if (!token) {
+            return { isValid: false, result: ErrorMessages.TOKEN_MISSING };
         }
-        return false;  // Token is invalid if no exp field is found
+
+        /* const payload = this.decodeToken(token);
+        if (!payload?.exp) {
+            return { isValid: false, result: ErrorMessages.TOKEN_INVALID };
+        }
+        
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (currentTime > payload.exp) { // Replace it to ">" if there's valid token
+            return { isValid: false, result: ErrorMessages.TOKEN_EXPIRED };
+        } */
+        
+        return { isValid: true,  result: token };
     }
 
-    // Decode the token (base64 URL-decoded) and get the payload
-    private decodeToken(token: string): any {
+    // Decode the token (Base64 URL-decoded) and get the payload
+    private decodeToken(token: string): Record<string, any> | null {
         try {
             const payload = token.split('.')[1];
-            const decoded = atob(payload); // Decode the payload part of the JWT
+            const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/')); // Base64 URL decode
             return JSON.parse(decoded);
-        } catch (e) {
+        } catch (error) {
             return null;
         }
     }
 }
-
-// Usage
-//  const authManager = AuthTokenManager.getInstance();
-//  authManager.setToken('yourTokenHere');
-//  const token = authManager.getToken();

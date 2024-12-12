@@ -6,7 +6,7 @@ Template Post Type: page
 
 get_header();
 
-get_template_part( 'src/blocks/layouts/pages/pricing/site-head' );
+get_template_part( 'src/blocks/layouts/site-head' );
 
 if ( have_rows( 'pricing_blocks' ) ) {
     while ( have_rows( 'pricing_blocks' ) ) {

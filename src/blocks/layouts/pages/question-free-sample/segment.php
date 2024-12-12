@@ -51,7 +51,7 @@ $transcripting_html = '
             <img src="' . get_template_directory_uri() . '/src/assets/img/static-loader.png" class="w-[55px] h-auto object-cover hidden max-[880px]:inline-block" alt="loader">
             <div class="-mt-[70px] max-[880px]:mt-0">
                 <h2 class="text-[#041D34] text-[26px] leading-[34px] -tracking-[0.38px] font-bold mb-2 max-[880px]:text-[19px] max-[880px]:leading-[26px] max-[880px]:-tracking-[0.28px]">Transcribing your file...</h2>
-                <p class="text-[#041D3488] max-[880px]:text-xs max-[880px]:leading-[23px]">Conf_NYC-23-23-1113-3252g.mp4</p>
+                <p id="media-filename" class="text-[#041D3488] max-[880px]:text-xs max-[880px]:leading-[23px]">Conf_NYC-23-23-1113-3252g.mp4</p>
             </div>
         </div>
         <div class="hidden max-[880px]:flex text-center mt-[23px] max-w-[279px] max-auto">
@@ -68,16 +68,16 @@ $sample_ready_html = '
                 <h2 class="text-primary text-[22px] leading-[34px] -tracking-[0.38px] font-bold mb-[11px] max-[880px]:text-[19px] max-[880px]:leading-[26px] max-[880px]:-tracking-[0.28px]">Your sample is ready</h2>
                 <div class="flex gap-x-[2px] items-center mb-6 max-[880px]:mb-[11px] max-[880px]:justify-center">
                     <span class="max-[880px]:hidden"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.16683 1.32385V3.73334C8.16683 4.06003 8.16683 4.22338 8.23041 4.34816C8.28634 4.45792 8.37557 4.54716 8.48534 4.60309C8.61012 4.66667 8.77347 4.66667 9.10016 4.66667H11.5096M5.25016 9.33329L6.41683 10.5L9.04183 7.87496M8.16683 1.16663H5.1335C4.1534 1.16663 3.66336 1.16663 3.28901 1.35736C2.95973 1.52514 2.69201 1.79286 2.52423 2.12214C2.3335 2.49649 2.3335 2.98653 2.3335 3.96663V10.0333C2.3335 11.0134 2.3335 11.5034 2.52423 11.8778C2.69201 12.2071 2.95973 12.4748 3.28901 12.6426C3.66336 12.8333 4.1534 12.8333 5.1335 12.8333H8.86683C9.84692 12.8333 10.337 12.8333 10.7113 12.6426C11.0406 12.4748 11.3083 12.2071 11.4761 11.8778C11.6668 11.5034 11.6668 11.0134 11.6668 10.0333V4.66663L8.16683 1.16663Z" stroke="#5148F9" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                    <p class="text-[#041D3488] text-xs leading-[23px] -tracking-[0.17px]">Conf_NYC-23-23-1113-3252g.mp4</p>
+                    <p id="media-filename" class="text-[#041D3488] text-xs leading-[23px] -tracking-[0.17px]">Conf_NYC-23-23-1113-3252g.mp4</p>
                 </div>
-                <a href="' . home_url() . '/sample" class="flex-[1_0_auto] bg-primary !text-white leading-[51px] text-center text-[17px] py-[5.5px] px-2 rounded-[56px] font-bold max-w-[142px] w-full">Continue</a>
+                <a href="' . home_url() . '/sample" class="flex-[1_0_auto] bg-primary !text-white leading-[51px] text-center text-[17px] py-[5.5px] px-2 rounded-[56px] font-bold max-w-[142px] w-full js-sample-ready-btn">Continue</a>
             </div>
         </div>
     </div>
 ';
 ?>
 
-<section class="questions">
+<section class="questions nepo">
     <div class="mx-auto">
         <div class="flex items-stretch max-[880px]:flex-col">
             <div class="flex-grow basis-2/4 max-[880px]:basis-full">
@@ -229,6 +229,14 @@ $sample_ready_html = '
 <?php
 // Register your JavaScript file and pass the content
 wp_localize_script('question-during-sample', 'duringSampleQuestions', array(
+    'questions'     => $questions_array,
+    'result'        => $success_html,
+    'slogan'        => $slogan,
+    'transcripting' => $transcripting_html,
+    'sample_ready'  => $sample_ready_html,
+));
+
+wp_localize_script('funnel-upload', 'duringSampleQuestions', array(
     'questions'     => $questions_array,
     'result'        => $success_html,
     'slogan'        => $slogan,

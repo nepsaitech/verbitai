@@ -4,7 +4,7 @@
             <div class="mx-auto max-[880px]:bg-primary max-[880px]:pb-9 max-lg:px-[14px]">
                 <ul class="flex items-start justify-center gap-6 mb-[43px] max-md:bg-primary max-[880px]:flex-col max-[880px]:items-center max-[880px]:mb-0">
                     <li class="grow-0 shrink-0 max-w-[372px] w-full text-[#041D34] text-center">
-                        <div class="bg-white py-3 px-[15px] rounded-[40px] [box-shadow:0px_7px_8px_0px_#5148F91A] min-h-[353px] max-md:p-[23px] max-md:pt-[34px] max-md:min-h-[283px] max-md:max-w-[348px] mx-auto" data-upload="wrap">
+                        <form class="bg-white py-3 px-[15px] rounded-[40px] [box-shadow:0px_7px_8px_0px_#5148F91A] min-h-[353px] max-md:p-[23px] max-md:pt-[34px] max-md:min-h-[283px] max-md:max-w-[348px] mx-auto">
                             <div class="w-full flex flex-col bg-[#5148F90D] border-2 border-dashed border-[#5148F980] rounded-[30px] pt-[33px] pb-[28px] px-6 min-h-[207px] max-md:min-h-0 max-md:justify-start max-md:p-0 max-md:pb-[38px] max-md:border-0 max-md:bg-transparent" data-upload="wrap-inner">
                                 <div class="max-md:flex max-md:flex-row max-md:items-center max-md:gap-4 max-md:justify-center">    
                                     <div class="max-md:flex max-md:items-center max-md:gap-[9px]" data-upload="initial">
@@ -69,7 +69,7 @@
                                 <p>No file on hand? <a href="#" class="text-primary visited:text-primary"><strong><u>Try testing with a sample</u></a></strong></p>
                             </div>
                             <a href="#" class="bg-[#5148F94D] !text-white text-center text-lg leading-[38px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[26px] max-md:mt-[34px] max-md:max-w-full">Transcribe Now</a>
-                        </div>
+                        </form>
                     </li>
                     <li class="grow-0 shrink-0 max-w-[372px] w-full text-[#041D34] text-center">
                         <div class="bg-white p-[29px] rounded-[40px] [box-shadow:0px_7px_8px_0px_#5148F91A] min-h-[353px] max-md:min-h-0 max-md:max-w-[348px] mx-auto" data-toggle="upload">

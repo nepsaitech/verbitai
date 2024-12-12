@@ -1,28 +1,24 @@
-const hourlyPlan = document.querySelector('.js-hourly-plan');
-hourlyPlan?.addEventListener('click', () => {
-    localStorage.setItem('customer_plan', 'hourly');
-   /*  if (localStorage.getItem('customer_plan') !== 'hourly') { */
-        localStorage.setItem('customer_plan_no_of_hours', "1");
-    /* } */
+const saveButton = document.querySelector('.js-business-plan-btn');
+saveButton?.addEventListener('click', () => {
+    setPlanId();
 });
 
+function setPlanId() {
+    const businessPlan = document.getElementById('business-plan') as HTMLInputElement;
+    const monthlyPlanID = document.getElementById('monthly-plan-id') as HTMLInputElement;
+    const yearlyPlanID = document.getElementById('yearly-plan-id') as HTMLInputElement;
 
-const businessPlan = document.getElementById('business-plan') as HTMLInputElement;
-const saveButton = document.querySelector('.js-business-plan-btn');
-if (businessPlan && saveButton) {
-    saveButton.addEventListener('click', () => {
-        const selectedPlan = businessPlan.checked ? 'monthly' : 'yearly';
-        localStorage.setItem('customer_plan', selectedPlan);
-    });
+    const moID = monthlyPlanID?.value || '';
+    const yrID = yearlyPlanID?.value || '';
+
+    const id = businessPlan?.checked ? moID : yrID;
+    localStorage.setItem('customer_plan', id);
 }
+setPlanId();
 
-
-const monthlyPlanId = (document.getElementById('monthly-plan-id') as HTMLInputElement)?.value || '';
-const yearlyPlanId = (document.getElementById('yearly-plan-id') as HTMLInputElement)?.value || '';
-function updatePlanId() {   
-    businessPlan.dataset.planId = businessPlan.checked ? monthlyPlanId : yearlyPlanId;
-    localStorage.setItem('customer_plan_id', businessPlan.dataset.planId);
-}
-updatePlanId();
-businessPlan.addEventListener('change', updatePlanId);
-
+const hourlyPlanInput = document.getElementById('js-hourly-plan') as HTMLInputElement;
+const hourlyPlanBtn = document.querySelector('.js-hourly-plan-btn') as HTMLButtonElement;
+hourlyPlanBtn.addEventListener('click', () => {
+    localStorage.setItem('customer_plan', hourlyPlanInput.value);
+    localStorage.setItem('customer_plan_no_of_hours', '1');
+});

@@ -95,9 +95,9 @@
                         <h3 class="text-[13px] text-primary leading-[17px] mb-[22px] w-fit mx-auto bg-[#5148F90F] rounded-[38px] px-[8.3px]"><?php echo esc_html( $upgrade_subtitle ); ?></h3>
                         <fieldset>
                             <div class="flex flex-wrap items-center justify-center  gap-x-[7px]">
-                                <input type="hidden" id="yearly-plan-id" value="<?php echo $monthly_product_id; ?>">
-                                <input type="hidden" id="monthly-plan-id" value="<?php echo $yearly_product_id; ?>">
-                                <input type="checkbox" id="business-plan" name="business-plan" class="peer hidden" data-plan-id="">
+                                <input type="hidden" id="yearly-plan-id" value="<?php echo $yearly_product_id; ?>">
+                                <input type="hidden" id="monthly-plan-id" value="<?php echo $monthly_product_id; ?>">
+                                <input type="checkbox" id="business-plan" name="business-plan" class="peer hidden" value="<?php echo $yearly_product_id; ?>">
                                 <p class="leading-[26px] text-[#041D34A5] peer-checked:text-primary peer-checked:font-bold">Monthly</p>
                                     <label for="business-plan" class="flex w-[38px] justify-end peer-checked:justify-start border border-solid border-[#5148F933] rounded-[26px] p-[1.3px]">
                                         <span class="inline-block rounded-full w-[18px] h-[18px] bg-primary"></span>

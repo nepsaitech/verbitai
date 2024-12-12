@@ -91,29 +91,8 @@ function load_transcript_content() {
 add_action('wp_ajax_load_transcript_content', 'load_transcript_content');
 add_action('wp_ajax_nopriv_load_transcript_content', 'load_transcript_content');
 
-// Register custom REST API endpoint for questions
+
 add_action('rest_api_init', function () {
-    register_rest_route('questions/v1', '/user-answers', [
-        'methods' => 'GET',
-        'callback' => 'get_user_answers',
-        'permission_callback' => '__return_true',
-    ]);
-});
-
-
-/* function get_profile_menu() {
-    $menu_items = wp_get_nav_menu_items('profile-menu');
-    return rest_ensure_response($menu_items);
-}
-add_action('rest_api_init', function () {
-    register_rest_route('custom/v1', '/profile-menu', array(
-        'methods' => 'GET',
-        'callback' => 'get_profile_menu',
-    ));
-});
- */
-
-/* add_action('rest_api_init', function () {
     register_rest_route('custom/v1', '/profile-menu', array(
         'methods'  => 'GET',
         'callback' => 'get_profile_menu',
@@ -134,77 +113,93 @@ function get_profile_menu() {
     return rest_ensure_response(array(
         'menu' => $menu,
     ));
-} */
-
-
-// Register a custom REST API endpoint
-/* add_action('rest_api_init', function () {
-    register_rest_route('questions/v1', '/submit-answer', [
-        'methods' => 'POST',
-        'callback' => 'handle_question_submission',
-        'permission_callback' => '__return_true', // For public access; use authentication if needed
-    ]);
-}); */
-
-/* function handle_question_submission($request) {
-    $params = $request->get_json_params();
-
-    // Validate the incoming data
-    $customer_token = sanitize_text_field($params['customer_token']);
-    $answers = $params['answers'];
-
-    if (!$customer_token || !is_array($answers)) {
-        return new WP_Error('invalid_data', 'Invalid data format.', ['status' => 400]);
-    }
-
-    // Optionally, check if the customer_token is valid
-    $user_id = get_user_by('meta_value', $customer_token)->ID ?? null;
-    if (!$user_id) {
-        return new WP_Error('invalid_token', 'Invalid customer token.', ['status' => 400]);
-    }
-
-    // Store answers in user meta (or another method)
-    foreach ($answers as $question_id => $answer_data) {
-        // Save each answer under user meta (or in a custom table)
-        update_user_meta($user_id, 'quiz_answer_' . $question_id, $answer_data['answer_id']);
-    }
-
-    return rest_ensure_response([
-        'message' => 'Answer submitted successfully.',
-        'data' => $answers
-    ]);
-} */
-
-
-
-// Callback function for returning dummy data
-/* function get_user_answers() {
-    // Dummy JSON data
-    $dummy_data = [
-        'status' => 'success',
-        'message' => 'Here is some dummy data',
-        'data' => [
-            'user_id' => 123,
-            'questions' => [
-                [
-                    'question_id' => 1,
-                    'question_text' => 'What is your favorite color?',
-                    'answers' => ['Red', 'Green', 'Blue', 'Yellow']
-                ],
-                [
-                    'question_id' => 2,
-                    'question_text' => 'What is your favorite animal?',
-                    'answers' => ['Cat', 'Dog', 'Bird', 'Fish']
-                ]
-            ],
-            'selected_answers' => [
-                'question_1' => 'Blue',
-                'question_2' => 'Dog'
-            ]
-        ]
-    ];
-
-    // Return the dummy data as a response
-    return new WP_REST_Response($dummy_data, 200);
 }
- */
+
+// Add header to the checkout page
+ add_action('render_block', function ($block_content, $block) {
+    if ($block['blockName'] === 'woocommerce/checkout') {
+        ob_start();
+        get_template_part('src/blocks/layouts/site-head');
+        get_template_part('src/blocks/components/stepper');
+        $custom_header = ob_get_clean();
+        $block_content = $custom_header . $block_content;
+    }
+    return $block_content;
+}, 10, 2);
+
+// Add custom hours dropdown to the checkout page
+/* add_action('wp_ajax_add_product_to_cart', 'add_product_to_cart_callback');
+add_action('wp_ajax_nopriv_add_product_to_cart', 'add_product_to_cart_callback');
+function add_product_to_cart_callback() {
+    if (!isset($_POST['product_id']) || !is_numeric($_POST['product_id'])) {
+        wp_send_json_error(['message' => 'Invalid product ID.']);
+    }
+    $product_id = intval($_POST['product_id']);
+    $product = wc_get_product($product_id);
+    if (!$product) {
+        wp_send_json_error(['message' => 'Product not found.']);
+    }
+    WC()->cart->empty_cart();
+    if (isset($_POST['hours']) && is_numeric($_POST['hours'])) {
+        $hours = intval($_POST['hours']);
+        $added = WC()->cart->add_to_cart($product_id, 1, 0, [], ['custom_hours' => $hours]);
+        if ($added) {
+            wp_send_json_success(['message' => 'Product added with custom hours!']);
+        } else {
+            wp_send_json_error(['message' => 'Failed to add product to cart.']);
+        }
+    } else {
+        $added = WC()->cart->add_to_cart($product_id);
+        if ($added) {
+            wp_send_json_success(['message' => 'Product added successfully!']);
+        } else {
+            wp_send_json_error(['message' => 'Failed to add product to cart.']);
+        }
+    }
+} */
+
+//  Update cart item price based on hours
+add_action('woocommerce_before_calculate_totals', 'update_cart_item_price_based_on_hours', 10, 1);
+function update_cart_item_price_based_on_hours($cart) {
+    if (is_admin() && !defined('DOING_AJAX')) {
+        return;
+    }
+    $target_product_id = 1338;
+    foreach ($cart->get_cart() as $cart_item) {
+        if ($cart_item['product_id'] == $target_product_id && isset($cart_item['custom_hours'])) {
+            $hours = intval($cart_item['custom_hours']);
+            $original_price = floatval($cart_item['data']->get_regular_price());
+            $new_price = $original_price * $hours;
+            $cart_item['data']->set_price($new_price);
+        }
+    }
+}
+
+// Redirect to custom page after checkout
+function custom_redirect_after_checkout($order_id) {
+    $redirect_url = 'http://verbit.local/verify/';
+    if (strpos($_SERVER['HTTP_HOST'], 'verbit.local') !== false) {
+        $redirect_url = 'http://verbit.local/verify/';
+    } else {
+        $redirect_url = 'https://staging-e3be-verbitai.wpcomstaging.com/verify/';
+    }
+    wp_redirect($redirect_url);
+    exit;
+}
+add_action('woocommerce_thankyou', 'custom_redirect_after_checkout');
+
+// Display email address in the order details
+function show_user_email_address() {
+    ob_start();
+    ?>
+
+    <div>
+        <h2>Email Address</h2>
+        <p><?php echo wp_get_current_user()->user_email; ?></p>
+    </div>
+    
+    <?php
+    return ob_get_clean();
+
+}
+add_shortcode('woocommerce_account_content', 'show_user_email_address');

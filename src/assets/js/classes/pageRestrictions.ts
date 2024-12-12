@@ -16,7 +16,8 @@ export class PageRestrictions {
 
     checkRedirect(): void {
         const currentPage = window.location.pathname;
-        if (authManager.isTokenValid()) {
+        const TOKEN = authManager.validateToken();
+        if (TOKEN.isValid) {
             if ((userRoles.includes('user-without-active-plan-with-free-sample') && this.exceptionPages.includes(currentPage))) {
                 window.location.href = '/login';
             }

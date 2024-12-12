@@ -37,7 +37,7 @@
 
                             <li class="flex-grow basis-full max-w-[145px] max-sm:max-w-fit">
                                 <label href="<?php echo esc_attr( the_permalink() ); ?>" class="relative text-black flex flex-col bg-white rounded-[20px] min-h-[166px] w-full h-full text-sm justify-center items-center pt-[38px] px-[17px] pb-[15px] cursor-pointer max-sm:py-[1px] max-sm:px-[18px] max-sm:min-h-0 max-sm:flex-row max-sm:rounded-[37px] max-sm:bg-transparent max-sm:border max-sm:border-solid max-sm:border-white max-sm:!text-white max-sm:justify-start max-sm:gap-[.5rem]">
-                                    <input id="vertical" class="peer hidden" type="radio" name="vertical" data-id="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $title ); ?>"/>
+                                    <input id="vertical" class="peer hidden" type="radio" name="vertical" data-name="<?php echo esc_attr( $slug ); ?>" data-id="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $title ); ?>"/>
                                     <div class="block peer-checked:hidden absolute left-[16px] top-[16px] border border-solid border-black w-[16px] h-[16px] rounded-[3px] max-sm:static max-sm:border-white"></div>
                                     <div class="hidden peer-checked:flex justify-center items-center absolute left-[16px] top-[16px] border border-solid border-primary bg-primary w-[16px] h-[16px] rounded-[3px] max-sm:static max-sm:border-white">
                                         <svg width="9" height="8" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.74707 2.85156L2.62049 4.85156L6.36732 0.851562" stroke="white"/></svg>

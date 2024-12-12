@@ -22,4 +22,14 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    'mt-[45px]',
+    'bottom-[22px]',
+    'max-md:p-0',
+    'max-[999px]:mb-0',
+    'max-[1050px]:p-0',
+    'max-[1050px]:mb-0',
+    'max-[1050px]:max-w-[328px]',
+    'max-[1050px]:mx-auto',
+  ],
 }

@@ -1,4 +1,4 @@
-<header class="bg-[#F2F6FF]">
+<header class="bg-[#F2F6FF] js-pricing-header">
     <div class="fixed w-full max-w-full px-[39px] pt-[33px] z-50 max-sm:p-[11px] max-md:px-5">    
         <section id="masthead" class="flex justify-between items-center rounded-[100px] py-4 pl-[38px] pr-[23px] max-sm:bg-none max-sm:backdrop-filter-none max-sm:backdrop-blur-none max-sm:p-4">
             <div class="mr-8 max-sm:flex max-sm:items-center logo" data-section="logo">
@@ -9,7 +9,12 @@
                         while ( have_rows( 'header', 'option' ) ) : the_row();
                             if ( have_rows( 'logo' ) ) :
                                 while ( have_rows( 'logo' ) ) : the_row();
-                                
+
+                                    $logo_variation_1 = get_sub_field( 'variation_1' );
+                                    if ( $logo_variation_1 ) {
+                                        $logo_variation_1_url = $logo_variation_1[ 'url' ];
+                                    }
+
                                     $logo_variation_2 = get_sub_field( 'variation_2' );
 
                                     if ( $logo_variation_2 ) :
@@ -107,11 +112,15 @@
                 <script>
                     // Pass the PHP data to a JavaScript variable
                     const buttonsData = <?php echo $header_buttons_json; ?>;
+                    var scrolledLogos = {
+                        logo1: "<?php echo esc_url( $logo_variation_1_url ); ?>",
+                        logo2: "<?php echo esc_url( $logo_variation_2_url ); ?>"
+                    };
                 </script>
 
                 <div class="flex items-center pricing js-header-right"></div>
                 
             </div>
-        </section><!-- #masthead -->
+        </section>
     </div>
 </header>

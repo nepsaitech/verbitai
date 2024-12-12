@@ -12,8 +12,8 @@
             $monthly_price = $monthly_product->get_regular_price();
             $monthly_additional_info = get_field('plan_selection_additional_info', 1310);
             ?>
-
-            <input id="monthly-plan" class="peer hidden" type="radio" name="plan-package" value="monthly"/>
+            <!-- /?plan=business?type={yearly|monthly|one-time} -->
+            <input id="monthly-plan" class="peer hidden" type="radio" name="plan-package" data-plan="business" value="price_1QSaJtRu1vbnX4dYqqv7hcKi"/>
             <label for="monthly-plan" class="flex cursor-pointer flex-col gap-y-[30px] border border-[#00000033] rounded-[20px] w-[185px] min-h-[185px] p-[15px] peer-checked:border-primary peer-checked:border-2 max-md:w-full max-md:min-h-0 max-md:flex-row max-md:items-center max-md:justify-between">
                 <div class="flex items-center justify-between max-md:justify-start">
                     <h2 class="font-extrabold text-black"><?php echo esc_html( $monthly_title ); ?></h2>
@@ -41,7 +41,7 @@
             $yearly_additional_info = get_field('plan_selection_additional_info', 1312);
             ?>
 
-            <input id="yearly-plan" class="peer cursor-pointer hidden" type="radio" name="plan-package" value="yearly" checked/>
+            <input id="yearly-plan" class="peer cursor-pointer hidden" type="radio" name="plan-package" data-plan="business" value="price_1QTZPpRu1vbnX4dYyEmKHG29" checked/>
             <label for="yearly-plan" class="flex flex-col gap-y-[30px] border border-[#00000033] rounded-[20px] w-[185px] min-h-[185px] p-[15px] peer-checked:border-primary peer-checked:border-2 max-md:w-full max-md:min-h-0 max-md:flex-row max-md:items-center max-md:justify-between">
                 <div class="flex items-center justify-between max-md:flex-col max-md:justify-start max-md:items-start">
                     <h2 class="font-extrabold text-black max-md:leading-[26px]"><?php echo esc_html( $yearly_title ); ?></h2>

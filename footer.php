@@ -70,6 +70,46 @@
 
 <?php wp_footer(); ?>
 
+<!-- <script src="https://js.stripe.com/v3/"></script>
+
+
+<script>
+	const stripe = Stripe('pk_test_51Q7yckRu1vbnX4dYRprklwVdrOfYG81CF1iRwvgaRJu3mfu0KzNCUbshNW9IhfrGDmve0E19RBDufZIn0VAB7jJp00ApCK1lnC'); // Replace with your Stripe public key
+	const elements = stripe.elements();
+	const cardElement = elements.create('card');
+	cardElement.mount('#card-element');
+
+	document.getElementById('payment-form').addEventListener('submit', async (e) => {
+		e.preventDefault();
+
+		// Create a payment token
+		const { paymentMethod, error } = await stripe.createPaymentMethod({
+			type: 'card',
+			card: cardElement,
+		});
+
+		if (error) {
+			console.error(error);
+			alert('Error creating payment method: ' + error.message);
+			return;
+		}
+
+		// Send the token (paymentMethod.id) to your server
+		const response = await fetch('http://verbit.local/wp-json/stripe-payment/v1/payment', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				token: paymentMethod.id,
+			}),
+		});
+
+		const result = await response.json();
+		alert(result.message);
+	});
+</script> -->
+
 <script id="__bs_script__">//<![CDATA[
   (function() {
     try {

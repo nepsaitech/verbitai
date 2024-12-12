@@ -68,7 +68,6 @@ jQuery(function(jQuery) {
         var video = jQuery(this).get(0);
         if (video !== $clickedVideo) {
             video.pause();
-            console.log('pause!');
             jQuery(this).siblings('figure').show();
         }
       });
@@ -186,47 +185,47 @@ jQuery(function(jQuery) {
 
 
 
-/*   jQuery('[name="local-upload"]').on('change', function() {
+  jQuery('[name="local-upload"]').on('change', function() {
     const item = jQuery(this).parents('li');
     const initial = item.find('[data-upload="initial"]');
-    const uploading = item.find('[data-upload="uploading"]');
-    const result = item.find('[data-upload="result"]');
+    /* const uploading = item.find('[data-upload="uploading"]'); */
+    /* const result = item.find('[data-upload="result"]'); */
     const uploadButton = item.find('label[for="local-upload"]');
     const test = item.find('.js-upload-test');
     const language = item.find('[data-upload="language"]');
-    const wrap = item.find('[data-upload="wrap"]');
+    const wrap = item.find('form');
     const wrapInner = item.find('[data-upload="wrap-inner"]');
     const status = item.find('[data-upload="status"]');
 
     initial.removeClass('max-md:flex').addClass('hidden');
     uploadButton.addClass('hidden');
-    uploading.removeClass('hidden').addClass('max-md:flex');
+   /*  uploading.removeClass('hidden').addClass('max-md:flex'); */
     test.addClass('max-md:hidden');
     wrap.addClass('max-md:flex max-md:flex-col max-md:justify-between');
     wrapInner.removeClass('max-md:pb-[38px]').addClass('max-md:pb-0');
     test.next('a').removeClass('mt-[26px] max-md:mt-[34px]');
 
     setTimeout(function() {
-      uploading.removeClass('max-md:flex').addClass('hidden');
-      result.removeClass('hidden').addClass('max-md:block');
+      /* uploading.removeClass('max-md:flex').addClass('hidden'); */
+      /* result.removeClass('hidden').addClass('max-md:block'); */
       test.addClass('hidden');
-      test.next('a').removeClass('mt-[26px]').addClass('hidden');
+      /* test.next('a').removeClass('mt-[26px]').addClass('hidden'); */
       test.next('div').addClass('hidden');
-      test.siblings('a').addClass('hidden');
+      /* test.siblings('a').addClass('hidden'); */
       language.next('a').removeClass('mt-[26px] max-md:mt-[34px] max-w-[303px]').addClass('max-md:mt-[17px] max-md:max-w-[103px]');
       wrap.removeClass('max-md:pb-[38px] max-md:pb-[9px]').addClass('max-md:pt-[30px]');
       status.removeClass('max-md:mb-[22px]');
     }, 1000);
-  }); */
+  });
 
 
   jQuery(window).scroll(function() {
     if (jQuery(this).scrollTop() > 50) {
-        jQuery('[data-header="upload"]').addClass('backdrop-filter backdrop-blur-[34px] [box-shadow:0px_1px_0px_0px_#FFFFFF1A_inset] bg-gradient-to-t from-[#7D77FB] via-[#807AFB] to-[#7871FA]');
-        jQuery('[data-header="wrap"]').removeClass('px-[39px] py-[33px] max-sm:px-2.5 max-md:px-5 max-[880px]:px-[20px]').addClass('p-2.5');
+      jQuery('[data-header="upload"]').addClass('backdrop-filter backdrop-blur-[34px] [box-shadow:0px_1px_0px_0px_#FFFFFF1A_inset] bg-gradient-to-t from-[#7D77FB] via-[#807AFB] to-[#7871FA]');
+      jQuery('[data-header="wrap"]').removeClass('px-[39px] py-[33px] max-sm:px-2.5 max-md:px-5 max-[880px]:px-[20px]').addClass('p-2.5');
     } else {
-        jQuery('[data-header="upload"]').removeClass('backdrop-filter backdrop-blur-[34px] [box-shadow:0px_1px_0px_0px_#FFFFFF1A_inset] bg-gradient-to-t from-[#7D77FB] via-[#807AFB] to-[#7871FA]');
-        jQuery('[data-header="wrap"]').addClass('px-[39px] py-[33px] max-sm:px-2.5 max-md:px-5 max-[880px]:px-[20px]').removeClass('p-2.5');
+      jQuery('[data-header="upload"]').removeClass('backdrop-filter backdrop-blur-[34px] [box-shadow:0px_1px_0px_0px_#FFFFFF1A_inset] bg-gradient-to-t from-[#7D77FB] via-[#807AFB] to-[#7871FA]');
+      jQuery('[data-header="wrap"]').addClass('px-[39px] py-[33px] max-sm:px-2.5 max-md:px-5 max-[880px]:px-[20px]').removeClass('p-2.5');
     }
   });
 
@@ -354,4 +353,68 @@ jQuery(function(jQuery) {
       }
     });
   } */
+
+    
+  jQuery('form.wc-block-components-form wc-block-checkout__form').on('submit', function() {
+    localStorage.removeItem('customer_plan_no_of_hours');
+  });
+});
+
+
+// Checkout UI
+
+
+// Function to format a date into "Month Day" (e.g., Sept 8th)
+function formatDate(date) {
+  const months = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+      "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
+  ];
+
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+
+  // Add suffix to the day (st, nd, rd, th)
+  const daySuffix = 
+      day % 10 === 1 && day !== 11 ? "st" :
+      day % 10 === 2 && day !== 12 ? "nd" :
+      day % 10 === 3 && day !== 13 ? "rd" : "th";
+
+  return `${month} ${day}${daySuffix}`;
+}
+
+// Function to calculate and display the trial message
+function displayTrialEndDate() {
+  const startDate = new Date();
+  const trialEndDate = new Date();
+  trialEndDate.setDate(startDate.getDate() + 7); // Add 7 days
+  const formattedDate = formatDate(trialEndDate);
+  const trialMessage = `After your 7-day free trial, on ${formattedDate}`;
+
+  jQuery('.wc-block-checkout__sidebar .wps_recurring_bifurcation_wrapper li:nth-of-type(2) label').text(trialMessage);
+  jQuery('.wc-block-checkout__sidebar .wps_recurring_bifurcation_wrapper li:nth-of-type(2) .wps_sfw_interval').text(function(_, currentText) {
+    return currentText.replace(/\s+/g, "");
+  });
+}
+
+
+jQuery(window).on('load', function() {
+
+  jQuery('.wc-block-checkout__sidebar .wc-block-components-totals-item.wc-block-components-totals-footer-item .wc-block-components-totals-item__label').text('Total due today');
+
+  jQuery('.wc-block-checkout__sidebar .wps_recurring_bifurcation_wrapper').insertAfter('.wc-block-checkout__sidebar .wc-block-components-totals-item.wc-block-components-totals-footer-item');
+
+  jQuery('#js-checkout-terms').insertAfter('.wp-block-woocommerce-checkout-order-summary-block .wp-block-woocommerce-checkout-order-summary-totals-block + .wc-block-components-totals-wrapper');
+
+  jQuery('#contact.wc-block-components-address-form .wc-block-components-address-form__email input + label').text('Signed in as');
+
+  let planLabel = jQuery('.wc-block-checkout__sidebar .wc-block-components-order-summary-item__description .wc-block-components-product-name').text();
+  let trimPlanLabel = planLabel.replace(/\s?\(.*?\)/, '');
+  jQuery('.wc-block-checkout__sidebar .wc-block-components-order-summary__content').prepend(`<div class="plan-and-trial-labels"><span>${trimPlanLabel}</span><a href="#">7 -day free trial</a></div>`);
+
+  jQuery('.wc-block-components-totals-coupon.wc-block-components-panel .wc-block-components-panel__button').trigger('click');
+  jQuery('#wc-block-components-totals-coupon__form input').blur();
+  jQuery('#wc-block-components-totals-coupon__form input').attr('placeholder', 'Enter Coupon');
+
+  displayTrialEndDate();
 });

@@ -919,20 +919,44 @@
   }
 
   /* Pricing */
-  header .pricing .customer-initials {
-    @apply bg-primary !text-white;
+  .js-scrl-header section.scrolled {
+    @apply bg-[rgba(81,72,249,0.7)] backdrop-filter backdrop-blur-[17px];
   }
 
-  header .pricing .email-prefix {
+  .page-template-page-pricing .customer-initials {
+    @apply bg-primary text-white max-[569px]:bg-[#161978];
+  }
+
+  .page-template-page-pricing .email-prefix {
     @apply text-primary;
   }
 
-  header .pricing svg {
-    @apply !text-primary;
+  .page-template-page-pricing .main-navigation ul.menu > li a {
+    @apply text-[#041D34] max-[600px]:text-white;
   }
 
-  .page-template-page-pricing .main-navigation li a {
-    @apply text-[#041D34] max-[600px]:text-white;
+  .page-template-page-pricing .scrolled .main-navigation ul.menu > li > a {
+    @apply text-white;
+  }
+
+  .page-template-page-question-free-sample
+    .scrolled
+    .main-navigation
+    ul
+    > li.menu-item-has-children
+    > a:after,
+  .page-template-page-pricing
+    .scrolled
+    .main-navigation
+    ul
+    > li.menu-item-has-children
+    > a:after {
+    @apply filter brightness-0 invert;
+  }
+
+  .page-template-page-question-free-sample .menu-toggle svg path,
+  .page-template-page-pricing .menu-toggle svg path {
+    @apply stroke-[#161978];
   }
 
   .page-template-page-pricing

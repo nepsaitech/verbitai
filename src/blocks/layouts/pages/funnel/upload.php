@@ -1,31 +1,17 @@
-<!-- <form id="uploadForm">
-    <label for="mediaFile">Choose a file to upload:</label>
-    <input type="file" id="mediaFile" name="mediaFile" accept="audio/*,video/*" />
-    <br>
-
-    <label for="mediaUrl">Or provide a URL to media:</label>
-    <input type="url" id="mediaUrl" name="mediaUrl" placeholder="Enter media URL" />
-    <br>
-
-    <button type="submit">Upload Media</button>
-</form>
-
-<p id="statusOutput"></p> -->
-
 <section class="funnel-upload">
     <div class="-mt-[12.1rem] max-[880px]:mt-0">
         <div class="max-w-screen-xl mx-auto">
             <div class="mx-auto max-[880px]:bg-primary max-[880px]:pb-9 max-lg:px-[14px]">
                 <ul class="flex items-start justify-center gap-6 mb-[43px] max-md:bg-primary max-[880px]:flex-col max-[880px]:items-center max-[880px]:mb-0">
                     <li class="grow-0 shrink-0 max-w-[372px] w-full text-[#041D34] text-center">
-                        <div class="bg-white py-3 px-[15px] rounded-[40px] [box-shadow:0px_7px_8px_0px_#5148F91A] min-h-[353px] max-md:p-[23px] max-md:pt-[34px] max-md:min-h-[283px] max-md:max-w-[348px] mx-auto" data-upload="wrap">
-                            <div class="w-full flex flex-col bg-[#5148F90D] border-2 border-dashed border-[#5148F980] rounded-[30px] pt-[33px] pb-[28px] px-6 min-h-[207px] max-md:min-h-0 max-md:justify-start max-md:p-0 max-md:pb-[38px] max-md:border-0 max-md:bg-transparent js-upload-form" data-upload="wrap-inner">
+                        <form class="bg-white py-3 px-[15px] rounded-[40px] [box-shadow:0px_7px_8px_0px_#5148F91A] min-h-[353px] max-md:p-[23px] max-md:pt-[34px] max-md:min-h-[283px] max-md:max-w-[348px] mx-auto">
+                            <div class="w-full flex flex-col bg-[#5148F90D] border-2 border-dashed border-[#5148F980] rounded-[30px] pt-[33px] pb-[28px] px-6 min-h-[207px] max-md:min-h-0 max-md:justify-start max-md:p-0 max-md:pb-[38px] max-md:border-0 max-md:bg-transparent" data-upload="wrap-inner">
                                 <div class="max-md:flex max-md:flex-row max-md:items-center max-md:gap-4 max-md:justify-center">    
                                     <div class="max-md:flex max-md:items-center max-md:gap-[9px]" data-upload="initial">
                                         <div class="flex justify-center items-center mx-auto rounded-full mb-[11px] max-md:mb-0">
                                             <img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/upload.png" alt="icon">
                                         </div>
-                                        <h2 class="text-[22px] leading-[34px] text-primary mb-[15px] font-bold max-md:mb-0">Upload a Media file</h2>
+                                        <h2 class="text-[22px] leading-[34px] text-primary mb-[15px] font-bold max-md:mb-0">Upload file</h2>
                                     </div>
                                     <div class="hidden mt-[36px] max-md:justify-center max-md:items-center max-md:gap-[5px] max-md:mt-0" data-upload="uploading">
                                         <div class="flex justify-center items-center mx-auto rounded-full mb-[5px] max-md:mb-0">
@@ -68,22 +54,22 @@
                                                 </a>
                                             </div>
                                         </div>
-                                        <a href="/questions/" class="bg-primary !text-white text-center text-lg leading-[37px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[26px] max-md:mt-[34px] max-md:max-w-full">Transcribe Now</a>
+                                        <a href="/questions" id="file-transcribe-btn" class="bg-primary !text-white text-center text-lg leading-[37px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[26px] max-md:mt-[34px] max-md:max-w-full">Transcribe Now</a>
                                     </div>
                                 </div>
                                 <div class="mx-auto text-[#041D34]">
-                                    <input type="file" id="file-upload" name="local-upload" accept="video/*,audio/*" required class="hidden js-file-upload">
+                                    <input type="file" id="file-upload" name="local-upload" accept="video/*,audio/*" required class="hidden">
                                     <label for="file-upload" class="flex items-center border border-[#5C6C7B33] gap-[5px] text-[#041D34] rounded-[54px] text-xs leading-[31px] py-[2.5px] px-2.5 max-w-[80px] mx-auto max-md:mt-[14px] js-browse-btn">
                                         <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.65" d="M8.2238 4.80208L7.57306 3.50062C7.38578 3.12605 7.29213 2.93876 7.15243 2.80193C7.02888 2.68093 6.87998 2.5889 6.71651 2.53251C6.53164 2.46875 6.32225 2.46875 5.90347 2.46875H3.6738C3.0204 2.46875 2.6937 2.46875 2.44414 2.59591C2.22462 2.70776 2.04614 2.88624 1.93429 3.10576C1.80713 3.35532 1.80713 3.68202 1.80713 4.33542V4.80208M1.80713 4.80208H10.6738C11.6539 4.80208 12.1439 4.80208 12.5183 4.99282C12.8476 5.1606 13.1153 5.42832 13.2831 5.7576C13.4738 6.13195 13.4738 6.62199 13.4738 7.60208V10.1687C13.4738 11.1488 13.4738 11.6389 13.2831 12.0132C13.1153 12.3425 12.8476 12.6102 12.5183 12.778C12.1439 12.9687 11.6539 12.9687 10.6738 12.9687H4.60713C3.62704 12.9687 3.13699 12.9687 2.76265 12.778C2.43336 12.6102 2.16565 12.3425 1.99787 12.0132C1.80713 11.6389 1.80713 11.1488 1.80713 10.1687V4.80208Z" stroke="#041D34" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                         Browse
                                     </label>
                                 </div>
                             </div>
-                            <div class="text-primary text-sm leading-[19px] text-center mt-2 max-md:mt-0 js-upload-test">
+                            <div class="text-primary text-sm leading-[19px] text-center mt-2 max-md:mt-0 js-try-sample">
                                 <p>No file on hand? <a href="#" class="text-primary visited:text-primary"><strong><u>Try testing with a sample</u></a></strong></p>
                             </div>
                             <a href="#" class="bg-[#5148F94D] !text-white text-center text-lg leading-[38px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[26px] max-md:mt-[34px] max-md:max-w-full">Transcribe Now</a>
-                        </div>
+                        </form>
                     </li>
                     <li class="grow-0 shrink-0 max-w-[372px] w-full text-[#041D34] text-center">
                         <div class="bg-white p-[29px] rounded-[40px] [box-shadow:0px_7px_8px_0px_#5148F91A] min-h-[353px] max-md:min-h-0 max-md:max-w-[348px] mx-auto" data-toggle="upload">
@@ -152,14 +138,14 @@
                                             </div>
                                         </div>
                                         <!-- submit button -->
-                                        <a href="/question" id="js-url-validate-btn" class="bg-primary !text-white text-center text-lg leading-[37px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[38px]">Transcribe Now</a>
+                                        <a href="/question" id="url-transcribe-btn" class="bg-primary !text-white text-center text-lg leading-[37px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[38px]">Transcribe Now</a>
                                     </div>
                                 </div>
                                 <p id="url-result-msg" class="text-sm text-[#d11f1f] text-left"></p>
                                 <div class="js-url-form">
                                     <ul class="w-full url-uploads js-upload-test">
                                         <li class="relative pl-8 border border-solid border-[#71717F33] !rounded-[8px] max-md:border-primary max-md:[box-shadow:0px_0px_0px_4px_#5148F91C]">
-                                            <input type="text" id="js-url-upload" name="url-upload" placeholder="http://your.link/video_address.mp4" class="italic bg-white text-sm !border-none outline-none focus:outline-none w-full leading-[48px] !p-0 !rounded-r-[8px]">
+                                            <input type="text" id="url-upload" name="url-upload" placeholder="http://your.link/video_address.mp4" class="italic bg-white text-sm !border-none outline-none focus:outline-none w-full leading-[48px] !p-0 !rounded-r-[8px]">
                                         </li>
                                     </ul>
                                     <div class="mx-auto text-[#041D34]">
@@ -169,7 +155,7 @@
                                             <a><img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/vimeo-brand.png" alt="iso"></a>
                                         </div>
                                     </div>
-                                    <button id="js-transcribe-btn" class="bg-primary disabled:bg-[#5148F94D] !border-0 !text-white text-center text-lg leading-[38px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[44px]" disabled>Transcribe Now</button>
+                                    <button id="url-validate-btn" class="bg-primary disabled:bg-[#5148F94D] !border-0 !text-white text-center text-lg leading-[38px] p-[7px] rounded-[55px] font-bold max-w-[303px] mx-auto w-full mt-[44px]" disabled>Transcribe Now</button>
                                 </div>
                             </div>
                         </div>

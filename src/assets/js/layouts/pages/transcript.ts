@@ -30,10 +30,10 @@ window.addEventListener('scroll', () => {
 function revertStylesForFullTranscript(fullTranscript: HTMLElement, fullTranscriptWrap: HTMLElement, fullTranscriptInfo: HTMLElement, fullTranscriptBtn: HTMLElement) {
 
     fullTranscript.classList.remove('relative', 'z-20');
-    fullTranscriptWrap.classList.remove('fixed', 'left-0', 'right-0', 'bottom-[22px]');
+    fullTranscriptWrap.classList.remove('fixed', 'left-0', 'right-0', 'bottom-[22px]', 'max-md:p-0', 'max-[999px]:mb-0', 'max-[1050px]:p-0', 'max-[1050px]:mb-0', 'max-[1050px]:max-w-[328px]', 'max-[1050px]:mx-auto');
     fullTranscriptInfo.classList.remove('hidden');
     fullTranscriptBtn.classList.remove('bg-primary', 'max-w-[328px]', 'w-full', 'border-none', 'm-auto', 'px-[0]', 'py-[8.5px]');
-    fullTranscriptWrap.classList.add('bg-primary');
+    fullTranscriptWrap.classList.add('bg-primary', 'max-md:p-[26px]', 'max-[999px]:mb-4');
 }
 
 /**
@@ -58,10 +58,10 @@ window.addEventListener('scroll', () => {
         if (scrollPosition >= targetPosition) {
 
             fullTranscript.classList.add('relative', 'z-20');
-            fullTranscriptWrap.classList.add('fixed', 'left-0', 'right-0', 'bottom-[22px]');
+            fullTranscriptWrap.classList.add('fixed', 'left-0', 'right-0', 'bottom-[22px]', 'max-md:p-0', 'max-[999px]:mb-0', 'max-[1050px]:p-0', 'max-[1050px]:mb-0', 'max-[1050px]:max-w-[328px]', 'max-[1050px]:mx-auto');
             fullTranscriptInfo.classList.add('hidden');
             fullTranscriptBtn.classList.add('bg-primary', 'max-w-[328px]', 'w-full', 'border-none', 'm-auto', 'px-[0]', 'py-[8.5px]');
-            fullTranscriptWrap.classList.remove('bg-primary');
+            fullTranscriptWrap.classList.remove('bg-primary', 'max-md:p-[26px]', 'max-[999px]:mb-4');
         } else {
 
             revertStylesForFullTranscript(fullTranscript, fullTranscriptWrap, fullTranscriptInfo, fullTranscriptBtn);
@@ -214,3 +214,68 @@ if (backTopBtn) {
     });
 }
 
+import { fetchWithAuth } from '../../api/fetchWithAuth';
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await getSampleTranscript();
+});
+
+const getSampleTranscript = async () => {
+    const jobID = localStorage.getItem('vb_job_id');
+
+    try {
+        // ** Mock Data Mode **
+        const mockResponse = {
+            smart_player_url: "https://smart.player/play.php?vid=1234",
+            config: {
+                video_url: "https://www.youtube.com/watch?v=udB7QH45IeQ",
+                title: "Video title",
+                description: "Video description",
+                credits: "Video credits",
+                thumbnail_url: "https://test.com/images/thumbnail.png",
+                favicon: "https://test.com/images/favicon.ico",
+            },
+        };
+
+        const useMockData = true; // Set to `false` to switch to real API
+        let jobData;
+
+        if (useMockData) {
+            console.log("Using mock data...");
+            jobData = mockResponse;
+        } else {
+            // ** Real API Mode **
+            const jobApi = `https://api-staging.verbit.co/api/job/info?v=4&job_id=${jobID}`;
+            const jobRes = await fetchWithAuth(jobApi);
+
+            if (!jobRes.ok) {
+                console.error("Failed to fetch status:", jobRes.status);
+                return;
+            }
+
+            jobData = await jobRes.json();
+        }
+        
+        const smartPlayerTitle = document.getElementById('smart-player-title');
+        if (smartPlayerTitle) smartPlayerTitle.textContent = jobData.config.title;
+
+        const smartPlayerVideo = document.getElementById('smart-player-video');
+        if (smartPlayerVideo) {
+            const iframe = createYouTubeEmbed(jobData.config.video_url);
+            smartPlayerVideo.appendChild(iframe);
+        }
+    } catch (error) {
+        console.error('Error loading video player:', error);
+    }
+};
+
+
+const createYouTubeEmbed = (url: string) => {
+    const iframe = document.createElement('iframe');
+    iframe.src = url.replace('watch?v=', 'embed/');
+    iframe.width = '560';
+    iframe.height = '196';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    return iframe;
+};
