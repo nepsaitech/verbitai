@@ -124,7 +124,7 @@
                                     <span class="text-[28px] font-bold"><?php echo $str_mo_currency; ?><?php echo $str_mo_amount; ?> <span class="text-base  font-normal js-plan-interval">/ <?php echo $str_mo_interval; ?></span></span>
                                 </div>
                                 <div class="flex text-[#303030] peer-checked:hidden items-end justify-center mt-[22px] w-full">
-                                    <span class="text-[28px] font-bold"><?php echo $str_yr_currency; ?><?php echo $str_yr_amount; ?> <span class="text-base  font-normal js-plan-interval">/ <?php echo $str_yr_interval; ?></span></span>
+                                    <span class="text-[28px] font-bold"><?php echo $str_yr_currency; ?><?php echo $str_yr_amount; ?> <span class="text-base  font-normal js-plan-interval">/ <?php echo $str_mo_interval; ?></span></span>
                                 </div>
                             </div>
                         </fieldset>

@@ -32,7 +32,7 @@
                                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.16634 1.32385V3.73334C8.16634 4.06003 8.16634 4.22338 8.22992 4.34816C8.28585 4.45792 8.37509 4.54716 8.48485 4.60309C8.60963 4.66667 8.77298 4.66667 9.09968 4.66667H11.5092M5.24967 9.33329L6.41634 10.5L9.04134 7.87496M8.16634 1.16663H5.13301C4.15292 1.16663 3.66287 1.16663 3.28852 1.35736C2.95924 1.52514 2.69152 1.79286 2.52375 2.12214C2.33301 2.49649 2.33301 2.98653 2.33301 3.96663V10.0333C2.33301 11.0134 2.33301 11.5034 2.52375 11.8778C2.69152 12.2071 2.95924 12.4748 3.28852 12.6426C3.66287 12.8333 4.15292 12.8333 5.13301 12.8333H8.86634C9.84643 12.8333 10.3365 12.8333 10.7108 12.6426C11.0401 12.4748 11.3078 12.2071 11.4756 11.8778C11.6663 11.5034 11.6663 11.0134 11.6663 10.0333V4.66663L8.16634 1.16663Z" stroke="#5148F9" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                             <p class="text-xs leading-[23px] js-file-name">Conf_NYC-23-23-1113-3252g.mp4</p>
                                         </div>
-                                        <div class="flex items-center text-left gap-[11px] mb-[48px] max-md:flex-col max-md:mb-0 max-md:gap-[5px]" data-upload="language">
+                                        <div class="hidden items-center text-left gap-[11px] mb-[48px] max-md:flex-col max-md:mb-0 max-md:gap-[5px]" data-upload="language">
                                             <div class="max-md:flex max-md:gap-3">
                                                 <label for="" class="inline-block text-xs text-[#041D34A6] leading-[26px]">Source</label>
                                                 <a href="#" class="bg-white flex items-center gap-[5px] !text-[#041D34A6] py-[1.9px] px-[9.4px] rounded-[4px] border-2 border-solid border-[#5C6C7B33] text-center text-xs leading-[31px] max-md:px-[8.5px]">
@@ -101,8 +101,10 @@
                                             <p class="text-xs leading-[23px]">Conf_NYC-23-23-1113-3252g.mp4</p>
                                         </div> -->
                                         <div class="flex flex-col border border-[#EFEFEF] rounded-[20px] p-5 text-left max-md:py-0 max-md:px-[14px] max-md:border-none max-md:rounded-none">
-                                            <ul class="border-b border-[#EFEFEF] pb-4 mb-4 max-md:pb-0 max-md:mb-[34px]">
-                                                <li class="flex justify-between items-center mb-3 max-md:mb-2">
+                                            <!-- <ul class="border-b border-[#EFEFEF] pb-4 mb-4 max-md:pb-0 max-md:mb-[34px]"> -->
+                                            <ul class="border-0 border-[#EFEFEF] pb-0 mb-0 max-md:pb-0 max-md:mb-[34px]">
+                                                <!-- <li class="flex justify-between items-center mb-3 max-md:mb-2"> -->
+                                                <li class="flex justify-between items-center mb-0 max-md:mb-2">
                                                     <div class="flex flex-[1_0_auto] items-center gap-2 max-md:gap-[6px]">
                                                         <div class="bg-[#D9D9D9] flex justify-center items-center rounded-[4px] w-[82px] h-[46px]">
                                                             <img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/upload-url-placeholder.png" alt="upload placeholder">
@@ -114,7 +116,7 @@
                                                     </div>
                                                 </li>
                                             </ul>
-                                            <div class="flex items-center text-left gap-[11px] max-md:flex-col max-md:mb-0 max-md:gap-[5px]" data-upload="language">
+                                            <div class="hidden items-center text-left gap-[11px] max-md:flex-col max-md:mb-0 max-md:gap-[5px]" data-upload="language">
                                                 <div class="max-md:flex max-md:gap-3">
                                                     <label for="" class="inline-block text-xs text-[#041D34A6] leading-[26px]">Source</label>
                                                     <a href="#" class="bg-white flex items-center gap-[5px] !text-[#041D34A6] py-[1.9px] px-[9.4px] rounded-[4px] border-2 border-solid border-[#5C6C7B33] text-center text-xs leading-[31px] max-md:px-[8.5px]">

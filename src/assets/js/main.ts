@@ -33,11 +33,17 @@ window.getCurrencySymbol = function (currencyCode: string): string {
 };
 
 import { User } from "./models/User";
-/* function fetchUserData() { */
+let fetchCount = 0; 
+function fetchUserData() {
     const user = new User();
     user.loadUserData()
-/* }
-setInterval(fetchUserData, 3000); */
+
+    fetchCount++;
+    if (fetchCount >= 2) {
+        clearInterval(intervalId);
+    }
+}
+const intervalId = setInterval(fetchUserData, 3000);
 
 import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe('pk_test_51Q7yckRu1vbnX4dYRprklwVdrOfYG81CF1iRwvgaRJu3mfu0KzNCUbshNW9IhfrGDmve0E19RBDufZIn0VAB7jJp00ApCK1lnC');
