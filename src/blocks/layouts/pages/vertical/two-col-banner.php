@@ -9,7 +9,7 @@
                 </div>
                 <div class="flex flex-col space-y-[1rem] justify-center text-center items-center mt-[3rem]">
                     <a href="<?php echo (get_field('start_free_btn', 'option')) ? get_field('start_free_btn', 'option')['url'] : '#'; ?>" class="w-fit bg-secondary !text-[#031C34] uppercase py-5 px-10 rounded-[100px] font-bold tracking-[1px] [box-shadow:0px_24px_34px_0px_rgba(0,_0,_0,_0.10)] mx-auto">Start for free</a>
-                    <p class="text-[13px] text-white">hi! Free trial available</p>
+                    <p class="text-[13px] text-white">Free trial available</p>
                 </div> 
             </div>
         </div>

@@ -19,18 +19,8 @@
             $str_mo_amount_dollars = $str_mo_price_data->unit_amount / 100;
             $str_mo_currency = currency_symbol($str_mo_price_data->currency);
             $str_mo_amount = $str_mo_amount_dollars;
-
-        /* $currency_symbol  = get_woocommerce_currency_symbol();
-        $monthly_product_id = 1310; // Monthly Plan
-        $monthly_product = wc_get_product($monthly_product_id);
-
-        if ( $monthly_product ) : */
-
-            //$monthly_title = preg_replace('/.*\(([^)]+)\).*/', '$1', $monthly_product->get_name());
-            /* $monthly_price = $monthly_product->get_regular_price();
-            $monthly_additional_info = get_field('plan_selection_additional_info', 1310); */
             ?>
-            <!-- /?plan=business?type={yearly|monthly|one-time} -->
+
             <input id="monthly-plan" class="peer hidden" type="radio" name="plan-package" data-plan="business" value="price_1QSaJtRu1vbnX4dYqqv7hcKi"/>
             <label for="monthly-plan" class="flex cursor-pointer flex-col gap-y-[30px] border border-[#00000033] rounded-[20px] w-[185px] min-h-[185px] p-[15px] peer-checked:border-primary peer-checked:border-2 max-md:w-full max-md:min-h-0 max-md:flex-row max-md:items-center max-md:justify-between">
                 <div class="flex items-center justify-between max-md:justify-start">
@@ -66,16 +56,6 @@
             $str_yr_amount_dollars = $str_yr_price_data->unit_amount / 100;
             $str_yr_currency = currency_symbol($str_yr_price_data->currency);
             $str_yr_amount = $str_yr_amount_dollars;
-
-        /* $yearly_product_id = 1312; // Yearly Plan
-        $yearly_product = wc_get_product($yearly_product_id);
-
-        if ( $yearly_product ) : */
-
-            // $yearly_title = preg_replace('/.*\(([^)]+)\).*/', '$1', $yearly_product->get_name());
-            // $yearly_price = $yearly_product->get_regular_price();
-            // $yearly_discount = $yearly_product->get_sale_price();
-            // $yearly_additional_info = get_field('plan_selection_additional_info', 1312);
             ?>
 
             <input id="yearly-plan" class="peer cursor-pointer hidden" type="radio" name="plan-package" data-plan="business" data-recurring="month" value="price_1QTZPpRu1vbnX4dYyEmKHG29" checked/>

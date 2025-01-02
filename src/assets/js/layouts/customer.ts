@@ -4,8 +4,6 @@ import { setStartFreeURL } from "../main";
 
 declare const buttonsACFData: ButtonTypes[];
 
-
-
 async function displayUserData() {
     const apiUrl = `${(window as any).getBaseUrl()}/wp-json/custom/v1/profile-menu`;
     const menuHtml = await fetchMenuHtml(apiUrl);
