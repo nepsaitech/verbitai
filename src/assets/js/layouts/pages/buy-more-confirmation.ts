@@ -11,7 +11,7 @@ stripePromise.then(stripe => {
     const buyMoreCheckoutConfirmation = async () => {
         try {
             
-            const buyMoreConfirmApi = await fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=get_payment_details`, {
+            const buyMoreConfirmApi = await fetch(`${(window as any).getBaseUrl()}/wp-admin/admin-ajax.php?action=get_payment_details`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

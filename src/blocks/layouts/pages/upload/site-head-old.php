@@ -17,7 +17,7 @@
                                         $logo_variation_1_url = $logo_variation_1[ 'url' ];
                                         $logo_variation_1_alt = $logo_variation_1[ 'alt' ]; ?>
                                         
-                                        <a href="<?php echo home_url(); ?>">
+                                        <a href="<?= SELF_SERVICE_HOME_URL; ?>">
                                             <img src="<?php echo esc_url( $logo_variation_1_url ); ?>" alt="<?php echo esc_attr( $logo_variation_1_alt ); ?>">
                                         </a>
 

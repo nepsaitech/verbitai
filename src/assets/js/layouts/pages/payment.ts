@@ -120,7 +120,7 @@ stripePromise.then(stripe => {
 
         try {
             const couponCode = cardHolderCoupon?.value;
-            const couponApi = await fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=validate_coupon`, {
+            const couponApi = await fetch(`${(window as any).getBaseUrl()}/wp-admin/admin-ajax.php?action=validate_coupon`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ stripePromise.then(stripe => {
 
     const displayPlanDetails = async () => {
         try {
-            const productApi = await fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=product_details`, {
+            const productApi = await fetch(`${(window as any).getBaseUrl()}/wp-admin/admin-ajax.php?action=product_details`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -287,7 +287,7 @@ stripePromise.then(stripe => {
 
         try {
             // Create PaymentIntent on the backend
-            const paymentApi = await fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=payment`, {
+            const paymentApi = await fetch(`${(window as any).getBaseUrl()}/wp-admin/admin-ajax.php?action=payment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

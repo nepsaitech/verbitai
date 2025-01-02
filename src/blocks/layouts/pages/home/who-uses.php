@@ -22,19 +22,19 @@ $audience_posts = new WP_Query($args);
                         <a href="javascript:;" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Producers & Creators</a>
                     </li>
                     <li class="max-md:order-2">
-                        <a href="<?php echo home_url() . '/vertical/education/?personas=academic-researchers'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Academic Research</a>
+                        <a href="<?= SELF_SERVICE_HOME_URL . 'vertical/education/?personas=academic-researchers'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Academic Research</a>
                     </li>
                     <li class="max-md:order-1">
-                        <a href="<?php echo home_url() . '/vertical/corporate/?personas=marketing-managers'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Market Research</a>
+                        <a href="<?= SELF_SERVICE_HOME_URL . 'vertical/corporate/?personas=marketing-managers'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Market Research</a>
                     </li>
                     <li class="max-md:order-3">
-                        <a href="<?php echo home_url() . '/vertical/corporate/?personas=event-producers'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Event Producer</a>
+                        <a href="<?= SELF_SERVICE_HOME_URL . 'vertical/corporate/?personas=event-producers'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Event Producer</a>
                     </li>
                     <li class="max-md:order-4">
                         <a href="javascript:;" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Lawyers</a>
                     </li>
                     <li class="max-md:order-6">
-                        <a href="<?php echo home_url() . '/vertical/corporate/'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Corporate</a>
+                        <a href="<?= SELF_SERVICE_HOME_URL . 'vertical/corporate/'; ?>" target="_blank" class="!text-white border border-solid border-[#FFFFFFB2] rounded-[50px] px-[17.6px] py-[9.2px] max-sm:py-[9px] max-sm:px-[17.2px] max-md:border-white">Corporate</a>
                     </li>
                 </ul>
 

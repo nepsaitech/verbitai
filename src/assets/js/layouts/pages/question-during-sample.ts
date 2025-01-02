@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Send AJAX request to notify WordPress to send an email
 function sendSampleReadyEmail() {
-    fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=send_sample_ready_email`, {
+    fetch(`${(window as any).getBaseUrl()}wp-admin/admin-ajax.php?action=send_sample_ready_email`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

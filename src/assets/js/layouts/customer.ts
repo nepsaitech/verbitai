@@ -1,22 +1,15 @@
-import { AuthTokenManager } from "../api";
 import { ButtonTypes } from "../types/button";
 import { User } from "../models/User";
+import { setStartFreeURL } from "../main";
 
 declare const buttonsACFData: ButtonTypes[];
 
-function getApiBaseUrl(): string {
-    const hostname = window.location.hostname;
-    if (hostname === 'verbit.local') {
-        return 'http://verbit.local';
-    } else {
-        return 'https://staging-wp.verbit.co/self-service/';
-    }
-}
+
 
 async function displayUserData() {
-    const apiUrl =  `${getApiBaseUrl()}/wp-json/custom/v1/profile-menu`;
+    const apiUrl = `${(window as any).getBaseUrl()}/wp-json/custom/v1/profile-menu`;
     const menuHtml = await fetchMenuHtml(apiUrl);
-    const avatar   = `
+    const avatar = `
         <div class="flex gap-[11px] items-center max-md:ml-0">
             <a href="#" id="customer-initials" class="text-[13px] leading-[18px] w-[42px] h-[42px] rounded-full overflow-hidden flex justify-center items-center bg-white text-primary font-bold max-md:text-base max-md:leading-[22px] max-md:w-[52px] max-md:h-[52px] customer-initials"></a>
             <div class="relative z-10 flex flex-row gap-[11px] items-center cursor-pointer" data-toggle="profile">
@@ -27,23 +20,15 @@ async function displayUserData() {
         </div>`;
     const contactSalesCTA = `
         <a href="${Object.values(buttonsACFData)[0].url}" target="${Object.values(buttonsACFData)[0].target}" class="w-[173px] border-2 border-solid border-[#2EC6BA] rounded-[56px] !text-[#3DDED1] text-lg font-bold leading-[38px] py-[5px] px-[27px] text-center max-md:w-[127px] max-md:p-[5px] max-md:text-[15px] max-[600px]:hidden">${Object.values(buttonsACFData)[0].title}</a>`;
-
-    /* const startFreeCTA = `
-        <a href="${Object.values(buttonsACFData)[1].url}" target="${Object.values(buttonsACFData)[1].target}" class="flex justify-center leading-[48px] items-center bg-secondary !text-[#031C34] text-center py-[2px] px-[20px] ml-[17px] w-[115px] h-[52px] rounded-[58px] font-bold max-[600px]:w-[115px] max-[600px]:px-[20px] max-md:py-4 max-[860px]:w-[23%] max-[860px]:py-[1rem] max-[860px]:px-[2%]">${Object.values(buttonsACFData)[1].title}</a>`; */
-
     const startFreeCTA = `
-        <a href="${Object.values(buttonsACFData)[1].url}" target="${Object.values(buttonsACFData)[1].target}" class="flex justify-center leading-[48px] items-center bg-secondary !text-[#031C34] text-center py-[2px] px-[20px] w-[115px] h-[52px] rounded-[58px] font-bold max-[600px]:w-[115px] max-[600px]:px-[20px] max-md:py-4 max-[860px]:py-[1rem] max-[860px]:px-[2%]">${Object.values(buttonsACFData)[1].title}</a>`;
-    const headerCTA = `
-        <a href="${Object.values(buttonsACFData)[0].url}" target="${Object.values(buttonsACFData)[0].target}" class="border-2 border-solid border-[#2EC6BA] rounded-[56px] !text-[#3DDED1] text-lg font-bold leading-[38px] py-[5px] px-[27px] mr-[28px] max-[600px]:hidden max-[860px]:mr-[2%] max-[860px]:py-[15px] max-[860px]:px-[2%] max-[860px]:w-[32%] max-[860px]:text-center max-[860px]:leading-[100%]">${Object.values(buttonsACFData)[0].title}</a>
-        <a href="${Object.values(buttonsACFData)[1].url}" target="${Object.values(buttonsACFData)[1].target}" class="flex justify-center leading-[48px] items-center bg-secondary !text-[#031C34] text-center py-[2px] px-[20px] w-[115px] h-[52px] rounded-[58px] font-bold max-[600px]:w-[115px] max-[600px]:px-[20px] max-md:py-4 max-[860px]:w-[23%] max-[860px]:py-[1rem] max-[860px]:px-[2%]">${Object.values(buttonsACFData)[1].title}</a>`;
+        <a href="${Object.values(buttonsACFData)[1].url}" target="${Object.values(buttonsACFData)[1].target}" class="flex justify-center leading-[48px] items-center bg-secondary !text-[#031C34] text-center py-[2px] px-[20px] w-[115px] h-[52px] rounded-[58px] font-bold max-[600px]:w-[115px] max-[600px]:px-[20px] max-md:py-4 max-[860px]:py-[1rem] max-[860px]:px-[2%] js-start-free-btn">${Object.values(buttonsACFData)[1].title}</a>`;
 
     const avatarContainer = document.querySelector("header .js-header-right") as HTMLElement;
     const isPageUpload = document.querySelector('.page-template-page-upload');
     const isPageVertical = document.querySelector('.single-vertical');
 
-    /* const authManager = AuthTokenManager.getInstance(); */
-    const user = new User();
     try {
+        const user = new User();
         await user.loadUserData();
     
         if (avatarContainer) {
@@ -65,26 +50,10 @@ async function displayUserData() {
         }
     }
 
-    /* if (avatarContainer) {
-        const TOKEN = authManager.validateToken();
-        if (TOKEN.isValid) {
-            if (isPageUpload) {
-                avatarContainer.innerHTML = "";
-            } else {
-                avatarContainer.innerHTML = contactSalesCTA + avatar;
-            }
-        } else {
-            if (isPageVertical) {
-                avatarContainer.innerHTML = startFreeCTA;
-            } else {
-                avatarContainer.innerHTML = contactSalesCTA + startFreeCTA;
-            }
-        }
-    } */
+    setStartFreeURL();
 }
-document.addEventListener("DOMContentLoaded", displayUserData);
+displayUserData();
 
-//  Fetch the menu HTML from the API
 async function fetchMenuHtml(apiUrl: string): Promise<string | null> {
     try {
         const response = await fetch(apiUrl, {

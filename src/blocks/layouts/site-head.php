@@ -82,7 +82,7 @@
                                         $logo_variation_url = $logo_variation[ 'url' ];
                                         $logo_variation_alt = $logo_variation[ 'alt' ]; ?>
                                         
-                                        <a href="<?php echo home_url(); ?>">
+                                        <a href="<?= SELF_SERVICE_HOME_URL; ?>">
                                             <img src="<?php echo esc_url( $logo_variation_url ); ?>" id="site-logo" alt="<?php echo esc_attr( $logo_variation_alt ); ?>">
                                         </a>
 
@@ -147,9 +147,12 @@
                     while ( have_rows( 'header', 'option' ) ) : the_row();
                         if ( have_rows( 'buttons' ) ) :
                             while ( have_rows( 'buttons' ) ) : the_row();
-
-                                $contact_sales_link = get_sub_field( 'contact_sales' );
-                                $start_free_link = get_sub_field( 'start_free' );
+                                $contact_sales_link = get_sub_field('contact_sales');
+                                
+                                $start_free_link = get_sub_field('start_free');
+                                if (empty($start_free_link)) {
+                                    $start_free_link = get_field('start_free_btn', 'option');
+                                }
 
                                 if ( $contact_sales_link ) :
                                     $contact_sales_link_url    = esc_url( $contact_sales_link[ 'url' ] );
@@ -204,9 +207,8 @@
                         url_2: "<?php echo esc_url( $logo_variation_2_url ); ?>"
                     };
                 </script>
-
+                
                 <div class="flex items-center justify-end gap-7 max-md:gap-3 js-header-right"></div>
-
             </div>
         </section><!-- #masthead -->
     </div>

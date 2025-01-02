@@ -68,7 +68,7 @@
                         $start_free_btn_target = $start_free_btn[ 'target' ] ? $start_free_btn[ 'target' ] : '_self';
                         ?>
 
-                    <a href="<?php echo esc_url( $start_free_btn_url ); ?>" target="<?php echo esc_attr( $start_free_btn_target ); ?>" class="w-full bg-secondary !text-[#031C34] text-lg uppercase py-5 px-10 rounded-[100px] font-bold tracking-[1px] max-w-[246px] [box-shadow:0px_24px_34px_0px_rgba(0,_0,_0,_0.10)] mx-auto js-start-free-btn"><?php echo esc_html( $start_free_btn_title ); ?></a>
+                        <a href="<?php echo esc_url( $start_free_btn_url ); ?>" target="<?php echo esc_attr( $start_free_btn_target ); ?>" class="w-full bg-secondary !text-[#031C34] text-lg uppercase py-5 px-10 rounded-[100px] font-bold tracking-[1px] max-w-[246px] [box-shadow:0px_24px_34px_0px_rgba(0,_0,_0,_0.10)] mx-auto js-start-free-btn"><?php echo esc_html( $start_free_btn_title ); ?></a>
 
                     <?php endif; ?>
                     

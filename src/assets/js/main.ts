@@ -4,13 +4,17 @@ declare const stripeConfig: {
 
 declare global {
     interface Window {
+        getBaseUrl: () => string;
         getUrlParameter: (name: string) => string | null;
         getCurrencySymbol: (currencyCode: string) => string;
+        localUrl: string;
         stagingUrl: string;
     }
 }
 
-window.stagingUrl = 'https://staging-wp.verbit.co/self-service';
+window.localUrl = 'http://verbit.local';
+window.stagingUrl = 'https://staging-wp.verbit.co/self-service/';
+window.getBaseUrl = (): string => window.location.hostname === 'verbit.local' ? window.localUrl : window.stagingUrl;
 
 window.getUrlParameter = function (name: string): string | null {
     const urlParams = new URLSearchParams(window.location.search);
@@ -43,9 +47,6 @@ export default stripePromise;
 * Add query params for Sign Up
 **/
 const verticalInputs = document.querySelectorAll<HTMLInputElement>('input[name="vertical"]');
-const startFreeBtn   = document.querySelectorAll('.js-start-free-btn');
-const signupURL      = startFreeBtn?.length > 0 ? startFreeBtn[0]?.getAttribute('href') || '' : '';
-
 if (verticalInputs.length > 0) {
     verticalInputs.forEach((radio) => {
         radio.addEventListener('click', setVertical);
@@ -54,25 +55,38 @@ if (verticalInputs.length > 0) {
 
 function setVertical(event: any) {
     try {
-        const id = (event.target as HTMLInputElement).dataset.id || '';
-        const name = (event.target as HTMLInputElement).dataset.name || '';
+        const target = event.target as HTMLInputElement;
+        const id = target.dataset.id || '';
+        const name = target.dataset.name || '';
+
         localStorage.setItem('vb_vertical_id', id);
         localStorage.setItem('vb_vertical', name);
-        const vertical_id = localStorage.getItem('vb_vertical_id');
-        const vertical = localStorage.getItem('vb_vertical');
-        if (vertical_id && vertical) setStartFreeURL(vertical_id, vertical);
+
+        setStartFreeURL();
     } catch (error) {
         console.error("Failed:", error);
     }
 }
 
-function setStartFreeURL(vertical_id: string, vertical: string) {
-    const wpURL = `${location.protocol}//${location.hostname}/self-service/plan`;
-    const finalURL = `${signupURL}?vertical_id=${vertical_id}?vertical=${vertical}&redirect_url=${wpURL}&template_name=ss`;
-    startFreeBtn.forEach((btn) => btn.setAttribute('href', finalURL));
-    return finalURL;
+export function setStartFreeURL() {
+    const verticalId = localStorage.getItem('vb_vertical_id') || '';
+    const verticalName = localStorage.getItem('vb_vertical') || '';
+
+    const startFreeBtn = document.querySelectorAll('.js-start-free-btn');
+    const signupUrl = startFreeBtn?.length > 0 ? startFreeBtn[0]?.getAttribute('href') || '' : '';
+    const wpUrl = `${location.protocol}//${location.hostname}/self-service/plan`;
+
+    const url = new URL(signupUrl, location.origin);
+
+    const params = new URLSearchParams();
+    params.set('vertical_id', verticalId);
+    params.set('vertical', verticalName);
+    params.set('redirect_url', wpUrl);
+    params.set('template_name', 'ss');
+    
+    url.search = params.toString();
+
+    startFreeBtn.forEach((btn) => btn.setAttribute('href', decodeURIComponent(url.toString())));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    setStartFreeURL(localStorage.getItem('vb_vertical_id') || '', localStorage.getItem('vb_vertical') || '');
-});
+document.addEventListener('DOMContentLoaded', setStartFreeURL);
