@@ -1,5 +1,5 @@
 import { User } from "../../models/User";
-import { loadStripe } from '@stripe/stripe-js';
+import stripePromise from "../../main";
 
 const userData = new User();
 const cardHolderFirstName = document.getElementById('cardholder-firstname') as HTMLInputElement;
@@ -23,16 +23,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     userLastName = userData.getLastName();
     userEmail = userData.getEmail();
     
-    cardHolderFirstName.value = userFirstName;
-    cardHolderLastName.value = userLastName;
-    cardHolderEmail.textContent = userEmail;
+    if (cardHolderFirstName && cardHolderLastName && cardHolderEmail) {
+        cardHolderFirstName.value = userFirstName;
+        cardHolderLastName.value = userLastName;
+        cardHolderEmail.textContent = userEmail;
+    }
 });
 
 const subscriptionSummary = document.getElementById('subscription-summary');
 const oneTimeSummary = document.getElementById('one-time-summary');
 const packageQuantity = document.getElementById('package-quantity') as HTMLSpanElement;
 const cardButton = document.getElementById('card-button') as HTMLButtonElement;
-const cardButtonLabel = cardButton.querySelector('span');
+const cardButtonLabel = cardButton?.querySelector('span');
 const successPaymentIndicator = document.querySelector('.success-check-indicator');
 
 cardButtonLabel?.classList.remove('hidden');
@@ -46,16 +48,19 @@ if (selectedPlan === "business") {
     subscriptionSummary?.remove();
 }
 
-const stripePromise = loadStripe('pk_test_51Q7yckRu1vbnX4dYRprklwVdrOfYG81CF1iRwvgaRJu3mfu0KzNCUbshNW9IhfrGDmve0E19RBDufZIn0VAB7jJp00ApCK1lnC');
+/* const stripePromise = loadStripe('pk_test_51Q7yckRu1vbnX4dYRprklwVdrOfYG81CF1iRwvgaRJu3mfu0KzNCUbshNW9IhfrGDmve0E19RBDufZIn0VAB7jJp00ApCK1lnC'); */
 
 stripePromise.then(stripe => {
-
     if (!stripe) {
         console.error('Stripe.js failed to load');
         return;
     }
 
     const elements = stripe.elements();
+
+    const cardNumber = document.getElementById('card-number');
+    const cardExpiry = document.getElementById('card-expiry');
+    const cardCvc = document.getElementById('card-cvc');
 
     const cardNumberElement = elements.create('cardNumber', {
         style: {
@@ -74,13 +79,14 @@ stripePromise.then(stripe => {
             },
         },
     });
-    cardNumberElement.mount('#card-number');
-
     const cardExpiryElement = elements.create('cardExpiry');
-    cardExpiryElement.mount('#card-expiry');
-
     const cardCvcElement = elements.create('cardCvc');
-    cardCvcElement.mount('#card-cvc');
+
+    if (cardNumber && cardExpiry && cardCvc) {
+        cardNumberElement.mount('#card-number');
+        cardExpiryElement.mount('#card-expiry');
+        cardCvcElement.mount('#card-cvc');
+    }
 
     const cardHolderZipCode = document.getElementById('cardholder-zipcode') as HTMLInputElement;
     const cardResult: HTMLElement | null = document.getElementById('card-result');
@@ -114,7 +120,7 @@ stripePromise.then(stripe => {
 
         try {
             const couponCode = cardHolderCoupon?.value;
-            const couponApi = await fetch('/wp-admin/admin-ajax.php?action=validate_coupon', {
+            const couponApi = await fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=validate_coupon`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -165,7 +171,7 @@ stripePromise.then(stripe => {
 
     const displayPlanDetails = async () => {
         try {
-            const productApi = await fetch('/wp-admin/admin-ajax.php?action=product_details', {
+            const productApi = await fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=product_details`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -253,81 +259,97 @@ stripePromise.then(stripe => {
             return;
         }
 
-        /* if (cardResult) cardResult.textContent = 'Loading...'; */
-
+        // Create the Payment Method
         const { paymentMethod, error } = await stripe.createPaymentMethod({
             type: 'card',
             card: cardNumberElement,
             billing_details: {
                 name: `${cardHolderFirstName?.value} ${cardHolderLastName?.value}`,
-                /* address: { postal_code: cardHolderZipCode?.value, }, */
             },
         });
 
         await userData.loadUserData();
 
-        userId = userData.getCognitoUsername();
+        /* userId = userData.getCognitoUsername();
         userName = userData.getFullName();
-        userEmail = userData.getEmail();
+        userEmail = userData.getEmail(); */
+
+        userId = '1234';
+        userName = 'Nepo';
+        userEmail = 'nepo@mail.com';
 
         if (error) {
-            if (cardResult) cardResult.textContent = error.message || 'An unknown error occurred';
+            if (cardResult) cardResult.textContent = error.message || 'An unknown error occurred.';
             placeOrderLoader?.classList.add('hidden');
             cardButtonLabel?.classList.remove('hidden');
-        } else {
-            try {
-                const paymentApi = await fetch('/wp-admin/admin-ajax.php?action=payment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        payment_method_id: paymentMethod.id,
-                        price_id: priceId,
-                        quantity: selectedPlanQuantity,
-                        user_id: userId,
-                        user_name: userName,
-                        user_email: userEmail,
-                        coupon_code: validCoupon,
-                    }),
-                });
-    
-                if (!paymentApi.ok) {
-                    if (cardResult) cardResult.textContent = `Error: ${paymentApi.status}`;
-                    return;
-                }
-    
-                const paymentRes = await paymentApi.json();
-    
-                if (paymentRes.success) {
-                    /* if (cardResult) cardResult.textContent = paymentRes.data.message; */
-                    placeOrderLoader?.classList.add('hidden');
-                    successPaymentIndicator?.classList.remove('hidden');
-                    cardButton.textContent = '';
+            return;
+        }
 
-                    setTimeout(() => {
-                        window.location.href = '/verify';
-                    }, 3000);
-                } else {
-                    if (cardResult) cardResult.textContent = paymentRes.data.message || 'An error occurred.';
-                    placeOrderLoader?.classList.add('hidden');
-                    cardButtonLabel?.classList.remove('hidden');
-                }
+        try {
+            // Create PaymentIntent on the backend
+            const paymentApi = await fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=payment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    payment_method_id: paymentMethod.id,
+                    price_id: priceId,
+                    quantity: selectedPlanQuantity,
+                    user_id: userId,
+                    user_name: userName,
+                    user_email: userEmail,
+                    coupon_code: validCoupon,
+                }),
+            });
 
-                cardNumberElement.clear();
-                cardExpiryElement.clear();
-                cardCvcElement.clear();
-                /* cardHolderZipCode?.value = ''; */
-            } catch (error) {
-                console.error('Error creating payment:', error);
-                if (cardResult) cardResult.textContent = 'An unexpected error occurred.';
-                placeOrderLoader?.classList.add('hidden');
-                cardButtonLabel?.classList.add('hidden');
+            if (!paymentApi.ok) {
+                if (cardResult) cardResult.textContent = `Error: ${paymentApi.status}`;
+                return;
             }
+
+            const paymentRes = await paymentApi.json();
+
+            if (!paymentRes.success) {
+                if (cardResult) cardResult.textContent = paymentRes.data.message || 'An error occurred.';
+                placeOrderLoader?.classList.add('hidden');
+                cardButtonLabel?.classList.remove('hidden');
+                return;
+            }
+
+            const { payment_intent_id } = paymentRes.data;
+            
+            if (paymentRes.success) {
+                let redirectUrl = '';
+                placeOrderLoader?.classList.add('hidden');
+                successPaymentIndicator?.classList.remove('hidden');
+                cardButton.textContent = '';
+
+                if (!payment_intent_id) {
+                    redirectUrl = `/verify`;
+                } else { 
+                    redirectUrl = `/confirmation?transaction_id=${payment_intent_id}`;
+                }
+                
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 3000);
+            } else {
+                if (cardResult) cardResult.textContent = 'Payment failed. Please try again.';
+                placeOrderLoader?.classList.add('hidden');
+                cardButtonLabel?.classList.remove('hidden');
+            }
+
+            cardNumberElement.clear();
+            cardExpiryElement.clear();
+            cardCvcElement.clear();
+        } catch (error) {
+            console.error('Error creating payment:', error);
+            if (cardResult) cardResult.textContent = 'An unexpected error occurred.';
+            placeOrderLoader?.classList.add('hidden');
+            cardButtonLabel?.classList.add('hidden');
         }
     });
-
-    
 }).catch((error) => {
     console.error('Error initializing Stripe:', error);
 });

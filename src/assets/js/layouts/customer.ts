@@ -2,30 +2,25 @@ import { AuthTokenManager } from "../api";
 import { ButtonTypes } from "../types/button";
 import { User } from "../models/User";
 
-const userData = new User();
 declare const buttonsACFData: ButtonTypes[];
 
 function getApiBaseUrl(): string {
     const hostname = window.location.hostname;
     if (hostname === 'verbit.local') {
         return 'http://verbit.local';
-    } else if (hostname === 'staging-e3be-verbitai.wpcomstaging.com') {
-        return 'https://staging-e3be-verbitai.wpcomstaging.com/';
     } else {
-        return 'https://production.com';
+        return 'https://staging-wp.verbit.co/self-service/';
     }
 }
 
 async function displayUserData() {
     const apiUrl =  `${getApiBaseUrl()}/wp-json/custom/v1/profile-menu`;
     const menuHtml = await fetchMenuHtml(apiUrl);
-    const initials = userData.getInitials();
-    const email    = userData.getEmailPrefix();
     const avatar   = `
         <div class="flex gap-[11px] items-center max-md:ml-0">
-            <a href="#" class="text-[13px] leading-[18px] w-[42px] h-[42px] rounded-full overflow-hidden flex justify-center items-center bg-white text-primary font-bold max-md:text-base max-md:leading-[22px] max-md:w-[52px] max-md:h-[52px] customer-initials">${initials}</a>
+            <a href="#" id="customer-initials" class="text-[13px] leading-[18px] w-[42px] h-[42px] rounded-full overflow-hidden flex justify-center items-center bg-white text-primary font-bold max-md:text-base max-md:leading-[22px] max-md:w-[52px] max-md:h-[52px] customer-initials"></a>
             <div class="relative z-10 flex flex-row gap-[11px] items-center cursor-pointer" data-toggle="profile">
-                <p class="text-white leading-[22px] max-[800px]:hidden email-prefix">${email}</p>
+                <p id="customer-email-prefix" class="text-white leading-[22px] max-[800px]:hidden email-prefix"></p>
                 <svg class="max-[800px]:hidden" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.9648 0.710938L5.96484 5.71094L0.964844 0.710938" stroke="white"/></svg>
                 <div class="profile-menu hidden absolute -left-[51px] right-auto top-[183%] w-[148px] flex-col bg-white rounded-[20px] [box-shadow:0px_4px_14px_0px_#0000001A]">${menuHtml || '<p>Loading...</p>'}</div>
             </div>
@@ -46,8 +41,31 @@ async function displayUserData() {
     const isPageUpload = document.querySelector('.page-template-page-upload');
     const isPageVertical = document.querySelector('.single-vertical');
 
-    const authManager = AuthTokenManager.getInstance();
-    if (avatarContainer) {
+    /* const authManager = AuthTokenManager.getInstance(); */
+    const user = new User();
+    try {
+        await user.loadUserData();
+    
+        if (avatarContainer) {
+            if (isPageUpload) {
+                avatarContainer.innerHTML = '';
+            } else {
+                avatarContainer.innerHTML = contactSalesCTA + avatar;
+            }
+        }
+    } catch (error) {
+        console.error('Failed to display user data:', error);
+    
+        if (avatarContainer) {
+            if (isPageVertical) {
+                avatarContainer.innerHTML = startFreeCTA;
+            } else {
+                avatarContainer.innerHTML = contactSalesCTA + startFreeCTA;
+            }
+        }
+    }
+
+    /* if (avatarContainer) {
         const TOKEN = authManager.validateToken();
         if (TOKEN.isValid) {
             if (isPageUpload) {
@@ -62,7 +80,7 @@ async function displayUserData() {
                 avatarContainer.innerHTML = contactSalesCTA + startFreeCTA;
             }
         }
-    }
+    } */
 }
 document.addEventListener("DOMContentLoaded", displayUserData);
 

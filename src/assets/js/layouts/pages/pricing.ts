@@ -1,24 +1,25 @@
-const saveButton = document.querySelector('.js-business-plan-btn');
-saveButton?.addEventListener('click', () => {
-    setPlanId();
-});
+const saveBtn = document.querySelector('.js-business-btn');
+const businessToggleEl = document.getElementById('business-toggle') as HTMLInputElement;
+businessToggleEl?.addEventListener('change', setPlanPriceId);
 
-function setPlanId() {
-    const businessPlan = document.getElementById('business-plan') as HTMLInputElement;
-    const monthlyPlanID = document.getElementById('monthly-plan-id') as HTMLInputElement;
-    const yearlyPlanID = document.getElementById('yearly-plan-id') as HTMLInputElement;
+function setPlanPriceId() {
+    const monthlyPriceEl = document.getElementById('monthly-price-id') as HTMLInputElement;
+    const yearlyPriceEl = document.getElementById('yearly-price-id') as HTMLInputElement;
+    
+    const monthlyPriceId = monthlyPriceEl?.value || '';
+    const yearlyPriceId = yearlyPriceEl?.value || '';
+    let planPriceId = "";
 
-    const moID = monthlyPlanID?.value || '';
-    const yrID = yearlyPlanID?.value || '';
-
-    const id = businessPlan?.checked ? moID : yrID;
-    localStorage.setItem('customer_plan', id);
+    if (businessToggleEl?.checked) {
+        planPriceId = monthlyPriceId;
+    } else {
+        planPriceId = yearlyPriceId;
+    }
+    saveBtn?.setAttribute('href', `/self-service/subscription-checkout?plan=business&quantity=1&price_id=${encodeURIComponent(planPriceId)}`);
 }
-setPlanId();
+setPlanPriceId();
 
-const hourlyPlanInput = document.getElementById('js-hourly-plan') as HTMLInputElement;
-const hourlyPlanBtn = document.querySelector('.js-hourly-plan-btn') as HTMLButtonElement;
-hourlyPlanBtn.addEventListener('click', () => {
-    localStorage.setItem('customer_plan', hourlyPlanInput.value);
-    localStorage.setItem('customer_plan_no_of_hours', '1');
-});
+const hourlyPlanEl = document.getElementById('hourly-price-id') as HTMLInputElement;
+const hourlyPlanBtn = document.querySelector('.js-hourly-btn') as HTMLButtonElement;
+const hourlyPriceId = hourlyPlanEl.value;
+hourlyPlanBtn?.setAttribute('href', `/self-service/subscription-checkout?plan=package&quantity=1&price_id=${encodeURIComponent(hourlyPriceId)}`);

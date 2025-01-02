@@ -22,7 +22,7 @@
         $header_style_3 = "mr-8 max-[600px]:w-fit max-sm:flex max-sm:items-center max-[860px]:w-[18%] max-[860px]:mr-0 logo";
         $header_style_4 = "w-[126px] leading-[0] max-[600px]:w-[126px] max-sm:w-[95px] max-sm:h-[33px] max-[860px]:w-full";
 
-    } elseif ( is_page_template('page-pricing.php') || is_page_template('page-question-free-sample.php') || is_page_template('page-select-your-plan.php')  || is_page_template('page-addons-and-translation-payment.php') || is_page_template('page-addons-and-translation-checkout.php') || is_page_template('page-balance-checkout.php') || is_page_template('page-confirmation-checkout.php') || is_page_template('page-no-addons-checkout.php') || is_page_template('page-upgrade-plan.php') || is_page_template('page-payment.php') || is_checkout() ) {
+    } elseif ( is_page_template('page-pricing.php') || is_page_template('page-question-free-sample.php') || is_page_template('page-select-your-plan.php')  || is_page_template('page-addons-and-translation-payment.php') || is_page_template('page-addons-and-translation-checkout.php') || is_page_template('page-balance-checkout.php') || is_page_template('page-confirmation-checkout.php') || is_page_template('page-no-addons-checkout.php') || is_page_template('page-upgrade-plan.php') || is_page_template('page-payment.php') || is_page_template('page-buy-more-checkout.php') || is_page_template('page-buy-more-confirmation.php') || is_checkout() ) {
 
         $header_class = "js-scrl-header";
         $header_bg_color = "";
@@ -70,8 +70,8 @@
                                         $logo_variation_2_url = $logo_variation_2[ 'url' ];
                                     }
 
-                                    // Transcript, Upgrade/Select Your Plan, No/Addons Translation Payment/Checkout, Balance Checkout, Confimation Checkout, Payment, Pricing pages
-                                    if ( is_page( array(314, 421, 655, 8, 1001, 997, 991, 993, 995, 999, 1003, 1301, 1005)) ) {
+                                    // Transcript, Upgrade/Select Your Plan, No/Addons Translation Payment/Checkout, Balance Checkout, Confimation Checkout, Buy More Checkout, Payment, Pricing pages
+                                    if ( is_page( array(314, 421, 655, 8, 1001, 997, 991, 993, 995, 999, 1003, 1301, 1005, 1845, 1899)) ) {
                                         $logo_variation = get_sub_field( 'variation_2' );
                                     } else {
                                         $logo_variation = get_sub_field( 'variation_1' );
@@ -98,7 +98,7 @@
             </div><!-- .site-branding -->
             <div class="flex items-center max-[860px]:flex-[1_0_auto] max-[860px]:justify-end" data-section="menu">
 
-                <?php if ( is_page_template('page-select-your-plan.php') || is_page_template('page-addons-and-translation-payment.php') || is_page_template('page-addons-and-translation-checkout.php') || is_page_template('page-balance-checkout.php') || is_page_template('page-confirmation-checkout.php') || is_page_template('page-no-addons-checkout.php') || is_page_template('page-upgrade-plan.php') || is_page_template('page-payment.php') || is_checkout() ) : ?>
+                <?php if ( is_page_template('page-select-your-plan.php') || is_page_template('page-addons-and-translation-payment.php') || is_page_template('page-addons-and-translation-checkout.php') || is_page_template('page-balance-checkout.php') || is_page_template('page-confirmation-checkout.php') || is_page_template('page-no-addons-checkout.php') || is_page_template('page-upgrade-plan.php') || is_page_template('page-payment.php') || is_page_template('page-buy-more-checkout.php') || is_page_template('page-buy-more-confirmation.php') || is_checkout() ) : ?>
             
                         <nav>
                             <?php wp_nav_menu( array( 'theme_location' => 'checkout-menu' )); ?>

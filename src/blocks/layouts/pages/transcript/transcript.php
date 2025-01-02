@@ -26,6 +26,7 @@
  
                     </div>
                     <div>
+                        <div id="embeddable-widget"></div>
                         <div class="text-sm js-transcript-text">
                             <div class="flex gap-x-[20px] max-md:flex-col">
                                 <div class="flex-[1_0_auto] max-w-[106px] w-full pt-6 max-md:max-w-full max-md:pb-1 max-md:flex max-md:item-center max-md:gap-2">

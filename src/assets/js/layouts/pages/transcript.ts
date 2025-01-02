@@ -216,54 +216,42 @@ if (backTopBtn) {
 
 import { fetchWithAuth } from '../../api/fetchWithAuth';
 
+const embeddableWidgetEl = document.getElementById('embeddable-widget');
 document.addEventListener('DOMContentLoaded', async () => {
     await getSampleTranscript();
 });
 
 const getSampleTranscript = async () => {
-    const jobID = localStorage.getItem('vb_job_id');
+    const jobID = localStorage.getItem('vb_job_id') || '';
 
     try {
-        // ** Mock Data Mode **
-        const mockResponse = {
-            smart_player_url: "https://smart.player/play.php?vid=1234",
-            config: {
-                video_url: "https://www.youtube.com/watch?v=udB7QH45IeQ",
-                title: "Video title",
-                description: "Video description",
-                credits: "Video credits",
-                thumbnail_url: "https://test.com/images/thumbnail.png",
-                favicon: "https://test.com/images/favicon.ico",
-            },
-        };
+        const embeddableWidgetRes = await fetchWithAuth(`https://self-service-staging.verbit.co/api/v1/job/sample/get-embeddable-widget?job_id=${jobID}`);
 
-        const useMockData = true; // Set to `false` to switch to real API
-        let jobData;
-
-        if (useMockData) {
-            console.log("Using mock data...");
-            jobData = mockResponse;
-        } else {
-            // ** Real API Mode **
-            const jobApi = `https://api-staging.verbit.co/api/job/info?v=4&job_id=${jobID}`;
-            const jobRes = await fetchWithAuth(jobApi);
-
-            if (!jobRes.ok) {
-                console.error("Failed to fetch status:", jobRes.status);
-                return;
-            }
-
-            jobData = await jobRes.json();
+        if (!embeddableWidgetRes.ok) {
+            console.error("Failed to fetch status:", embeddableWidgetRes.status);
+            return;
         }
+
+        const embeddableWidgetData = await embeddableWidgetRes.json();
+        const { html, title, media_url } =  embeddableWidgetData.content;
+        if (embeddableWidgetEl) {
+            embeddableWidgetEl.innerHTML = html;
+        }
+
+        /* if (embeddableWidgetData.success) {
+            console.log("embeddableWidgetData is here:", embeddableWidgetData);
+            embeddableWidgetEl?.append(embeddableWidgetData.content.html);
+        } else {
+            console.error("Failed to start transcription:", embeddableWidgetData);
+        } */
         
         const smartPlayerTitle = document.getElementById('smart-player-title');
-        if (smartPlayerTitle) smartPlayerTitle.textContent = jobData.config.title;
+        if (smartPlayerTitle) smartPlayerTitle.textContent = title;
 
-        const smartPlayerVideo = document.getElementById('smart-player-video');
+        /* const smartPlayerVideo = document.getElementById('smart-player-video');
         if (smartPlayerVideo) {
-            const iframe = createYouTubeEmbed(jobData.config.video_url);
-            smartPlayerVideo.appendChild(iframe);
-        }
+            smartPlayerVideo.innerHTML = media_url;
+        } */
     } catch (error) {
         console.error('Error loading video player:', error);
     }
@@ -279,3 +267,6 @@ const createYouTubeEmbed = (url: string) => {
     iframe.allowFullscreen = true;
     return iframe;
 };
+
+
+console.log('Transcript page loaded');

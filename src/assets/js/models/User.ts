@@ -22,8 +22,11 @@ export class User {
         this.family_name = data.content.family_name;
         this.email = data.content.email;
         this.roles = data.content.custom_platform_data.roles;
+
+        this.updateInitialsDOM();
+        this.updateEmailPrefixDOM();
       } catch (error) {
-        console.warn(error);
+        throw error;
       }
     }
 
@@ -60,5 +63,19 @@ export class User {
 
     public getRoles(): string[] {
       return this.roles;
+    }
+
+    private updateInitialsDOM(): void {
+      const initialsElement = document.getElementById('customer-initials');
+      if (initialsElement) {
+        initialsElement.textContent = this.getInitials();
+      }
+    }
+
+    private updateEmailPrefixDOM(): void {
+      const emailPrefixElement = document.getElementById('customer-email-prefix');
+      if (emailPrefixElement) {
+        emailPrefixElement.textContent = this.getEmailPrefix();
+      }
     }
 }

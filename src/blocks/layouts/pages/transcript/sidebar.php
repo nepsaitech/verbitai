@@ -6,7 +6,7 @@ if ( have_rows( 'sidebar' ) ):
         <sidebar class="flex-[1_0_auto] max-w-[362px] w-full max-[1050px]:hidden">
             <div class="sidebar max-w-[362px] max-[1320px]:max-w-full">
                 <div class="relative max-w-[362px] w-full bg-white rounded-[20px] [box-shadow:0px_7.84px_8.96px_0px_#5148F91A] py-[5px] px-[7px] mb-[14px] max-[1050px]:max-w-[362px] max-[1050px]:mb-[28px] max-[1050px]:mx-auto js-video">
-                    <div class="hidden">
+                    <div>
                         <img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/transcripted-video.png" class="w-full h-full object-cover" alt="transcript video">
                         <img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/transcripted-frequency.png" class="w-full h-auto object-cover mt-[7px] max-[1050px]:mt-[11px]" alt="transcript frequency">
                         <img src="<?php echo get_template_directory_uri(); ?>/src/assets/img/transcripted-timeline.png" class="w-full h-auto object-cover -mt-[26px] max-[1050px]:hidden" alt="transcript timeline">
@@ -19,7 +19,7 @@ if ( have_rows( 'sidebar' ) ):
                             </div>
                         </div>
                     </div>
-                    <div id="smart-player-video" class="rounded-[14px] overflow-hidden"></div>
+                    <!-- <div id="smart-player-video" class="rounded-[14px] overflow-hidden"></div> -->
                 </div>
 
                 <?php 

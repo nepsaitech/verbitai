@@ -2,7 +2,7 @@ import { ErrorMessages } from '../classes/errorMessages';
 
 export class AuthTokenManager {
     private static instance: AuthTokenManager;
-    private tokenKey: string = 'vb_token';
+    private tokenKey: string = 'staging_id_token';
   
     public static getInstance(): AuthTokenManager {
       if (!AuthTokenManager.instance) {
@@ -24,33 +24,39 @@ export class AuthTokenManager {
     }
     
     public validateToken(): { isValid: boolean; result?: string } {
-        const token = localStorage.getItem(this.tokenKey);
+        const token = this.getCookie(this.tokenKey);
 
         if (!token) {
             return { isValid: false, result: ErrorMessages.TOKEN_MISSING };
         }
 
-        /* const payload = this.decodeToken(token);
-        if (!payload?.exp) {
+        const payload = this.decodeToken(token);
+        /* if (!payload?.exp) {
             return { isValid: false, result: ErrorMessages.TOKEN_INVALID };
-        }
+        } */
         
         const currentTime = Math.floor(Date.now() / 1000);
-        if (currentTime > payload.exp) { // Replace it to ">" if there's valid token
+        if (currentTime > payload?.exp) {
             return { isValid: false, result: ErrorMessages.TOKEN_EXPIRED };
-        } */
+        }
         
         return { isValid: true,  result: token };
     }
-
-    // Decode the token (Base64 URL-decoded) and get the payload
+    
     private decodeToken(token: string): Record<string, any> | null {
         try {
             const payload = token.split('.')[1];
-            const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/')); // Base64 URL decode
+            const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
             return JSON.parse(decoded);
         } catch (error) {
             return null;
         }
+    }
+
+    private getCookie(name: string): string | null {
+        const matches = document.cookie.match(new RegExp(
+            `(?:^|; )${name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1')}=([^;]*)`
+        ));
+        return matches ? decodeURIComponent(matches[1]) : null;
     }
 }

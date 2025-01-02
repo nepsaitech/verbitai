@@ -113,7 +113,7 @@
                                     $cancel_button_target = $cancel_button[ 'target' ] ? $cancel_button[ 'target' ] : '_self';
                                     ?>
 
-                                    <a href="<?php echo esc_url( $cancel_button_url ); ?>" target="<?php echo esc_attr( $cancel_button_target ); ?>" class="text-primary leading-[29px] max-md:text- js-checkout-cancel-btn"><?php echo esc_html( $cancel_button_title ); ?></a>
+                                    <a href="<?php echo esc_url( $cancel_button_url ); ?>" target="<?php echo esc_attr( $cancel_button_target ); ?>" class="text-primary leading-[29px]"><?php echo esc_html( $cancel_button_title ); ?></a>
 
                                 <?php endif; ?>
 

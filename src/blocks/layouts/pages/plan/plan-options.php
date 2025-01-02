@@ -154,7 +154,7 @@ if ( $vertical ) {
                         $quick_test_button_target = $quick_test_button[ 'target' ] ? $quick_test_button[ 'target' ] : '_self'; 
                         ?>
 
-                        <a href="<?php echo esc_url( $quick_test_button_url ); ?>" target="<?php echo esc_attr( $quick_test_button_target ); ?>" class="relative inline-block bg-primary !text-white text-center text-lg py-3 px-7 rounded-[100px] font-bold max-w-[342px] w-full mx-auto max-sm:max-w-[286px]">
+                        <a href="/self-service/funnel-upload" target="<?php echo esc_attr( $quick_test_button_target ); ?>" class="relative inline-block bg-primary !text-white text-center text-lg py-3 px-7 rounded-[100px] font-bold max-w-[342px] w-full mx-auto max-sm:max-w-[286px]">
                             <span class="max-[880px]:hidden"><?php echo esc_html( $quick_test_button_title ); ?></span>
                             <span class="hidden max-[880px]:block max-[880px]:text-left">Get started</span>
                             <span class="inline-block absolute right-[21px] top-2/4 -translate-y-2/4">
@@ -210,7 +210,7 @@ if ( $vertical ) {
                         $get_full_button_target = $get_full_button[ 'target' ] ? $get_full_button[ 'target' ] : '_self';
                         ?>
                         
-                        <a href="<?php echo esc_url( $get_full_button_url ); ?>" target="<?php echo esc_attr( $get_full_button_target ); ?>" class="relative inline-block !text-primary text-center text-lg py-2.5 px-7 rounded-[76px] font-bold max-w-[342px] w-full mx-auto border-2 border-primary max-sm:max-w-[286px] max-[880px]:text-left">
+                        <a href="/self-service/subscription-checkout" target="<?php echo esc_attr( $get_full_button_target ); ?>" class="relative inline-block !text-primary text-center text-lg py-2.5 px-7 rounded-[76px] font-bold max-w-[342px] w-full mx-auto border-2 border-primary max-sm:max-w-[286px] max-[880px]:text-left">
                             <?php echo esc_html( $get_full_button_title ); ?>
                             <span class="inline-block absolute right-[21px] top-2/4 -translate-y-2/4">
                                 <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.35156 6.8457C0.799278 6.8457 0.351563 7.29342 0.351562 7.8457C0.351562 8.39799 0.799278 8.8457 1.35156 8.8457L1.35156 6.8457ZM21.0587 8.55281C21.4492 8.16229 21.4492 7.52912 21.0587 7.1386L14.6947 0.774636C14.3042 0.384112 13.671 0.384112 13.2805 0.774636C12.89 1.16516 12.89 1.79833 13.2805 2.18885L18.9373 7.8457L13.2805 13.5026C12.89 13.8931 12.89 14.5262 13.2805 14.9168C13.671 15.3073 14.3042 15.3073 14.6947 14.9168L21.0587 8.55281ZM1.35156 8.8457L20.3516 8.8457L20.3516 6.8457L1.35156 6.8457L1.35156 8.8457Z" fill="#5148F9"/></svg>

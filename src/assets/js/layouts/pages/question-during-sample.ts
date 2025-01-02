@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Send AJAX request to notify WordPress to send an email
 function sendSampleReadyEmail() {
-    fetch(`${window.location.origin}/wp-admin/admin-ajax.php?action=send_sample_ready_email`, {
+    fetch(`${window.stagingUrl}/wp-admin/admin-ajax.php?action=send_sample_ready_email`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -218,27 +218,10 @@ function sendSampleReadyEmail() {
         .catch(error => console.error("Error:", error));
 }
 
-// Dummy Mock Test for file status (for testing when the real API is not available)
-const mockStatusResponse = {
-    content: {
-        status: "in-progress", // Change this to "in-process" to simulate different scenarios
-    },
-};
-
-// Simulate a delay like an actual API call
-const simulateStatusCheck = async () => {
-    return new Promise<any>((resolve) => {
-        setTimeout(() => {
-            console.log("Mocked Job Status:", mockStatusResponse.content.status);
-            resolve(mockStatusResponse);
-        }, 1000); // Simulate a 2-second delay for the API response
-    });
-};
-
 // Polling to check upload status
 import { fetchWithAuth } from '../../api/fetchWithAuth';
 
-window.onload = async () => {
+/* window.onload = async () => {
     const jobID = localStorage.getItem("vb_job_id");
     const transcriptWrap = document.querySelector(".js-transcription-wrap") as HTMLElement;
 
@@ -251,8 +234,44 @@ window.onload = async () => {
         }
     };
 
+    // Start transcription
+    const jobId = localStorage.getItem("vb_job_id");
+    const parsedJobId = parseInt(jobId || '0');
+
+    if (isNaN(parsedJobId) || parsedJobId <= 0) {
+        console.error('Invalid or missing jobId:', jobId);
+        return;
+    }
+
+    try { 
+        const transcriptionResponse = await fetchWithAuth(
+            "https://self-service-staging.verbit.co/api/v1/job/sample/start-transcription",
+            "POST",
+            {
+                body: JSON.stringify({ job_id: parsedJobId }),
+                headers: { "Content-Type": "application/json" },
+            }
+        );
+    
+        const transcriptionData = await transcriptionResponse.json();
+
+
+        console.log('transcriptionData: ', transcriptionData);
+
+        if (transcriptionData.success) {
+            console.log("Transcription started successfully:", transcriptionData);
+        } else {
+            console.error("Failed to start transcription:", transcriptionData);
+        }
+    } catch (error) {
+        console.error("An error occurred while processing the file upload:", error);
+    }
+
+
+    const sampleBtn = document.querySelector(".js-sample-btn") as HTMLAnchorElement;
+
     const checkStatus = async () => {
-        /* const jobApi = `https://self-service-staging.verbit.co/api/v1/job/check?job_id=${jobID}`;
+        const jobApi = `https://self-service-staging.verbit.co/api/v1/job/sample/check?job_id=${jobID}`;
         const jobResponse = await fetchWithAuth(jobApi);
 
         if (!jobResponse.ok) {
@@ -260,43 +279,134 @@ window.onload = async () => {
             return;
         }
 
-        const jobData = await jobResponse.json(); */
-        
-        const isCompleted = localStorage.getItem("vb_job_completed");
-        if (isCompleted === "true") {
-            console.log("Processing already completed. Skipping polling.");
-            transcriptWrap.innerHTML = dsSampleReady;
-            return;
-        }
+        const jobData = await jobResponse.json();
+        const { job_status } = jobData.content;
 
-        const statusResponse = await simulateStatusCheck();
-        const { status } = statusResponse.content;
-        
-        // Log to verify polling interval
-        console.log("Job Status:", status);
-        console.log("Polling... Next check in 5 seconds");
-
-        if (status === "complete") {
-            console.log("File processing complete!");
+        if (job_status === "Completed") {
             transcriptWrap.innerHTML = dsSampleReady;
             updateMediaName();
-            /* sendSampleReadyEmail(); */
-            localStorage.setItem("vb_job_completed", "true");
+            sendSampleReadyEmail();
             clearInterval(statusInterval);
-        } else if (status === "in-progress") {
+            sampleBtn?.setAttribute("href", `/self-service/sample-ready?job_id=${jobID}`);
+        } else if (job_status === "In Progress" || job_status === "Pending") {
             transcriptWrap.innerHTML = dsTranscripting;
             updateMediaName();
-            console.log("File is still being processed...");
         }
     };
 
     updateMediaName();
 
-    // Start polling every 3 seconds
     const statusInterval = setInterval(checkStatus, 3000);
+} */
 
-    // Change status to "complete" after 8 seconds for testing
-    setTimeout(() => {
-        mockStatusResponse.content.status = "complete";
-    }, 10000);
+window.onload = async () => {
+    const jobID = localStorage.getItem("vb_job_id");
+    const transcriptWrap = document.querySelector(".js-transcription-wrap") as HTMLElement;
+    const mediaName = localStorage.getItem("vb_media_name");
+
+    const updateMediaName = () => {
+        const mediaNameEl = document.getElementById("media-filename");
+        if (mediaName && mediaNameEl) {
+            mediaNameEl.textContent = mediaName;
+        }
+    };
+
+    if (!jobID) {
+        console.error('Job ID is missing or invalid:', jobID);
+        return;
+    }
+
+    // Function to check job status
+    const checkStatus = async () => {
+        const jobApi = `https://self-service-staging.verbit.co/api/v1/job/sample/check?job_id=${jobID}`;
+        const jobResponse = await fetchWithAuth(jobApi);
+
+        if (!jobResponse.ok) {
+            console.error("Failed to fetch status:", jobResponse.status);
+            return null;
+        }
+
+        const jobData = await jobResponse.json();
+        return jobData.content.job_status;
+    };
+
+    // Check initial job status
+    try {
+        const initialJobStatus = await checkStatus();
+
+        if (initialJobStatus === "Completed") {
+            // Update UI for completed status and skip transcription
+            transcriptWrap.innerHTML = dsSampleReady;
+            updateMediaName();
+            updateButtonHrefOnContentChange(transcriptWrap, "#sample-ready-btn", jobID);
+            sendSampleReadyEmail();
+            return;
+        }
+
+        if (initialJobStatus === "In Progress" || initialJobStatus === "Pending") {
+            transcriptWrap.innerHTML = dsTranscripting;
+            updateMediaName();
+        }
+
+        // Start transcription if job_status is not "Completed"
+        try {
+            const transcriptionResponse = await fetchWithAuth(
+                "https://self-service-staging.verbit.co/api/v1/job/sample/start-transcription",
+                "POST",
+                {
+                    body: JSON.stringify({ job_id: parseInt(jobID, 10) }),
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+
+            const transcriptionData = await transcriptionResponse.json();
+
+            if (transcriptionData.success) {
+                console.log("Transcription started successfully:", transcriptionData);
+            } else {
+                console.error("Failed to start transcription:", transcriptionData);
+            }
+        } catch (error) {
+            console.error("An error occurred while starting transcription:", error);
+        }
+
+        // Periodically check job status
+        const statusInterval = setInterval(async () => {
+            const currentJobStatus = await checkStatus();
+
+            if (currentJobStatus === "Completed") {
+                transcriptWrap.innerHTML = dsSampleReady;
+                updateMediaName();
+                sendSampleReadyEmail();
+                clearInterval(statusInterval);
+                updateButtonHrefOnContentChange(transcriptWrap, "#sample-ready-btn", jobID);
+            } else if (currentJobStatus === "In Progress" || currentJobStatus === "Pending") {
+                transcriptWrap.innerHTML = dsTranscripting;
+                updateMediaName();
+            }
+        }, 3000);
+
+    } catch (error) {
+        console.error("An error occurred during the initial job status check:", error);
+    }
+    updateMediaName();
+};
+
+// Observes changes in a specified container element and updates the `href` of a button once the content is inserted.
+function updateButtonHrefOnContentChange(container: HTMLElement, buttonSelector: string, jobID: string): void {
+    const button = document.querySelector(buttonSelector) as HTMLAnchorElement;
+    if (!button) {
+        console.error("Button not found:", buttonSelector);
+        return;
+    }
+    const observer = new MutationObserver(() => {
+        if (button) {
+            button.setAttribute("href", `/self-service/sample-ready?job_id=${jobID}`);
+            observer.disconnect();
+        }
+    });
+    observer.observe(container, {
+        childList: true,
+        subtree: true
+    });
 }

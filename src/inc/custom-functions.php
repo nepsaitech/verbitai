@@ -127,79 +127,34 @@ function get_profile_menu() {
     return $block_content;
 }, 10, 2);
 
-// Add custom hours dropdown to the checkout page
-/* add_action('wp_ajax_add_product_to_cart', 'add_product_to_cart_callback');
-add_action('wp_ajax_nopriv_add_product_to_cart', 'add_product_to_cart_callback');
-function add_product_to_cart_callback() {
-    if (!isset($_POST['product_id']) || !is_numeric($_POST['product_id'])) {
-        wp_send_json_error(['message' => 'Invalid product ID.']);
-    }
-    $product_id = intval($_POST['product_id']);
-    $product = wc_get_product($product_id);
-    if (!$product) {
-        wp_send_json_error(['message' => 'Product not found.']);
-    }
-    WC()->cart->empty_cart();
-    if (isset($_POST['hours']) && is_numeric($_POST['hours'])) {
-        $hours = intval($_POST['hours']);
-        $added = WC()->cart->add_to_cart($product_id, 1, 0, [], ['custom_hours' => $hours]);
-        if ($added) {
-            wp_send_json_success(['message' => 'Product added with custom hours!']);
-        } else {
-            wp_send_json_error(['message' => 'Failed to add product to cart.']);
-        }
-    } else {
-        $added = WC()->cart->add_to_cart($product_id);
-        if ($added) {
-            wp_send_json_success(['message' => 'Product added successfully!']);
-        } else {
-            wp_send_json_error(['message' => 'Failed to add product to cart.']);
-        }
-    }
-} */
 
-//  Update cart item price based on hours
-add_action('woocommerce_before_calculate_totals', 'update_cart_item_price_based_on_hours', 10, 1);
-function update_cart_item_price_based_on_hours($cart) {
-    if (is_admin() && !defined('DOING_AJAX')) {
-        return;
-    }
-    $target_product_id = 1338;
-    foreach ($cart->get_cart() as $cart_item) {
-        if ($cart_item['product_id'] == $target_product_id && isset($cart_item['custom_hours'])) {
-            $hours = intval($cart_item['custom_hours']);
-            $original_price = floatval($cart_item['data']->get_regular_price());
-            $new_price = $original_price * $hours;
-            $cart_item['data']->set_price($new_price);
-        }
+// Get currency symbol
+if (!function_exists('currency_symbol')) {
+    function currency_symbol($currency) {
+        $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
+        $currency_symbol = $formatter->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
+        return $currency_symbol;
     }
 }
 
-// Redirect to custom page after checkout
-function custom_redirect_after_checkout($order_id) {
-    $redirect_url = 'http://verbit.local/verify/';
-    if (strpos($_SERVER['HTTP_HOST'], 'verbit.local') !== false) {
-        $redirect_url = 'http://verbit.local/verify/';
-    } else {
-        $redirect_url = 'https://staging-e3be-verbitai.wpcomstaging.com/verify/';
-    }
-    wp_redirect($redirect_url);
-    exit;
-}
-add_action('woocommerce_thankyou', 'custom_redirect_after_checkout');
-
-// Display email address in the order details
-function show_user_email_address() {
+// Add hubspot form shortcode
+function hubspot_form_shortcode() {
     ob_start();
     ?>
-
-    <div>
-        <h2>Email Address</h2>
-        <p><?php echo wp_get_current_user()->user_email; ?></p>
+    <div class="hubspot-form">
+        <div class="max-w-[1920px] mx-auto">
+            <div class="py-40 px-5">
+                <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+                <script>
+                hbspt.forms.create({
+                    portalId: "4023006",
+                    formId: "b6e9b2fe-5518-4339-999d-0ce877f07e51"
+                });
+                </script>
+            </div>
+        </div>
     </div>
-    
     <?php
     return ob_get_clean();
-
 }
-add_shortcode('woocommerce_account_content', 'show_user_email_address');
+add_shortcode('hubspot_form', 'hubspot_form_shortcode');

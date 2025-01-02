@@ -1,3 +1,44 @@
+declare const stripeConfig: {
+    publicKey: string;
+};
+
+declare global {
+    interface Window {
+        getUrlParameter: (name: string) => string | null;
+        getCurrencySymbol: (currencyCode: string) => string;
+        stagingUrl: string;
+    }
+}
+
+window.stagingUrl = 'https://staging-wp.verbit.co/self-service';
+
+window.getUrlParameter = function (name: string): string | null {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+};
+
+window.getCurrencySymbol = function (currencyCode: string): string {
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currencyCode,
+        currencyDisplay: 'symbol',
+    });
+
+    const formatted = formatter.format(0);
+    return formatted.replace(/[0-9.,]/g, '').trim();
+};
+
+import { User } from "./models/User";
+/* function fetchUserData() { */
+    const user = new User();
+    user.loadUserData()
+/* }
+setInterval(fetchUserData, 3000); */
+
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe('pk_test_51Q7yckRu1vbnX4dYRprklwVdrOfYG81CF1iRwvgaRJu3mfu0KzNCUbshNW9IhfrGDmve0E19RBDufZIn0VAB7jJp00ApCK1lnC');
+export default stripePromise;
+
 /**
 * Add query params for Sign Up
 **/
@@ -26,7 +67,7 @@ function setVertical(event: any) {
 }
 
 function setStartFreeURL(vertical_id: string, vertical: string) {
-    const wpURL = `${location.protocol}//${location.hostname}/plan`;
+    const wpURL = `${location.protocol}//${location.hostname}/self-service/plan`;
     const finalURL = `${signupURL}?vertical_id=${vertical_id}?vertical=${vertical}&redirect_url=${wpURL}&template_name=ss`;
     startFreeBtn.forEach((btn) => btn.setAttribute('href', finalURL));
     return finalURL;

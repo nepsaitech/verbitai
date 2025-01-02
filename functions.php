@@ -189,8 +189,6 @@ require get_template_directory() . '/src/inc/custom-acf.php';
  */
 require get_template_directory() . '/src/inc/custom-functions.php';
 
-
-
 require 'vendor/autoload.php';
 use Stripe\StripeClient;
 
@@ -303,10 +301,8 @@ function product_details_handler() {
 
 add_action('wp_ajax_payment', 'payment_handler');
 add_action('wp_ajax_nopriv_payment', 'payment_handler');
-
 function payment_handler() {
 	$stripe = new \Stripe\StripeClient(STRIPE_SECRET_KEY);
-
 	$input = json_decode(file_get_contents('php://input'), true);
     $payment_method_id = isset($input['payment_method_id']) ? sanitize_text_field($input['payment_method_id']) : null;
 	$price_id = isset($input['price_id']) ? sanitize_text_field($input['price_id']) : null;
@@ -315,82 +311,42 @@ function payment_handler() {
     $user_id = isset($input['user_id']) ? sanitize_text_field($input['user_id']) : null;
     $user_name = isset($input['user_name']) ? sanitize_text_field($input['user_name']) : null;
     $user_email = isset($input['user_email']) ? sanitize_text_field($input['user_email']) : null; 
-    /* $couponCode = isset($input['coupon']) ? sanitize_text_field($input['coupon']) : null; */
+	$isSubscription = false;
 
-	/* if (!$user_id || !$payment_method_id || !$price_id) {
+	if (!$user_id || !$payment_method_id || !$price_id) {
         wp_send_json_error(['message' => 'Subscription plan not found']);
         wp_die();
-    } */
+    }
 
-	/* $coupon = $stripe->coupons->retrieve($couponCode);
-	echo "<pre>";
-	var_dump($coupon);
-	echo "</pre>"; */
+	$valid_subscription_plans = [
+		'price_1QSaJtRu1vbnX4dYqqv7hcKi',
+		'price_1QTZPpRu1vbnX4dYyEmKHG29'
+	];
 
-	$plan = null;
+	$isSubscription = in_array($price_id, $valid_subscription_plans);
 
-	switch ($price_id) {
+	if (!$isSubscription && $price_id !== 'price_1QTePORu1vbnX4dY18VTfgZp') {
+		wp_send_json_error(['message' => 'Invalid subscription plan']);
+		wp_die();
+	}
+
+	/* switch ($price_id) {
 		case 'price_1QSaJtRu1vbnX4dYqqv7hcKi':
-			$plan = 'business';
+			$isSubscription = true;
 			break;
 		case 'price_1QTZPpRu1vbnX4dYyEmKHG29':
-			$plan = 'business';
+			$isSubscription = true;
 			break;
 		case 'price_1QTePORu1vbnX4dY18VTfgZp':
-			$plan = 'pay-as-you-go';
+			$isSubscription = false;
 			break;
 		default:
 			wp_send_json_error(['message' => 'Invalid subscription plan']);
 			wp_die();
-	}
+	} */
 
     try {
-		// Get the price object
 		$price = $stripe->prices->retrieve($price_id);
-
-		// Validate coupon code if provided
-		/* $promotion_code_id = null; */
-		
-		/* echo "<pre>";
-		print_r('DISPLAY PROMOTION CODE ', $coupon_code);
-		$promotion_codes = $stripe->promotionCodes->all(['code' => $coupon_code]);
-		print_r('DISPLAY PROMOTION CODE OBJECT ', $promotion_codes);
-		echo "</pre>";
-		exit; */
-
-		/* if ($coupon_code) {
-			$promotion_codes = $stripe->promotionCodes->all(['code' => $coupon_code]);
-			
-			if (!empty($promotion_codes->data)) {
-				$promotion_code_id = $promotion_codes->data[0]->id;
-			} else {
-				wp_send_json_error(['message' => 'Invalid coupon code.']);
-				wp_die();
-			}
-		} */
-
-		// Search customers where vb_user_id matches or is null
-		/* $query = "email:'{$user_email}'";
-    
-		// Add vb_user_id to the query if it exists
-		if (!empty($user_id)) {
-			$query .= " AND metadata['vb_user_id']:'{$user_id}'";
-		}
-
-		$existing_customers = $stripe->customers->search(['query' => $query]); */
-
-		/* // First search: by vb_user_id
-		 $customers_by_id = $stripe->customers->search([
-			'query' => "metadata['vb_user_id']:'{$user_id}'",
-		]);
-	
-		// Second search: by email
-		$customers_by_email = $stripe->customers->search([
-			'query' => "email:'{$user_email}'",
-		]); */
-	
-		// Combine results
-		/* $customers = array_merge($customers_by_id->data, $customers_by_email->data); */
 
 		// Search for a customer using both external_user_id and email
 		$existing_customers = $stripe->customers->search([
@@ -398,23 +354,16 @@ function payment_handler() {
 		]);
 
 		if (count($existing_customers->data) > 0) {
-			// Customer exists, proceed to attach the payment method
 			$customer_id = $existing_customers->data[0]->id;
+			$stripe->paymentMethods->attach($payment_method_id, ['customer' => $customer_id]);
 		} else {
-			// Create a new customer if not found
 			$customer = $stripe->customers->create([
-				'email' => $user_email, // $user_email
-				'name' => $user_name, // $user_name
-				'metadata' => ['vb_user_id' => $user_id], // $user_id
+				'email' => $user_email,
+				'name' => $user_name,
+				'metadata' => ['vb_user_id' => $user_id],
 			]);
 			$customer_id = $customer->id;
 		}
-		
-		// Customer already exists
-		$stripe->paymentMethods->attach(
-		$payment_method_id,
-		['customer' => $customer_id] // $customer_id
-		);
 
 		$has_coupon = false;
 		if (!empty($coupon_code)) {
@@ -422,93 +371,73 @@ function payment_handler() {
 			$has_coupon = true;
 		}
 
-		// Create the payment (subscription or one-time)
-		if ($plan === 'business') {
-			// Handle subscription payment
-			/* $subscriptions = $stripe->subscriptions->create([
-			'customer' => $customer_id,
-			'items' => [['price' => $price_id]],
-			'default_payment_method' => $payment_method_id,
-			'recurring' => [
-				'trial_period_days' => 7,
-			]
-			]); */
-
-			// Create subscription
+		if ($isSubscription) {
 			$subscription_data = [
-				'customer' => $customer_id, // $customer_id
+				'customer' => $customer_id,
 				'items' => [['price' => $price_id]],
 				'default_payment_method' => $payment_method_id,
+				'metadata' => ['isSubcription' => $isSubscription],
 			];
-
-			/* print_r('promotion_code_id ->' . $promotion_code_id);
-			print_r('promotion_code ->' . $coupon_data['promotion_code_id']);
-			exit; */
 
 			// Add promotion code if available
 			$code_id = $coupon_data['id'];
 
-			if ($coupon_data['type'] === 'promotion') {
-				$subscription_data['promotion_code'] = $code_id;
-			} else {
-				$subscription_data['discounts'] = [[
-					'coupon' => $coupon_code,
-				]];
-			}
-
-			/* if (!empty($promotion_code_id)) {
-			} else {
-				try {
-					$coupons = $stripe->coupons->retrieve($coupon_code);
-	
-					if (!empty($coupons)) {
-						$subscription_data['discounts'] = [[
-							'coupon' => $coupon_code,
-						]];
-					}
-				} catch (\Exception $e) {
-					wp_send_json_error(['message' => 'Error retrieving coupon details: ' . $e->getMessage()]);
-					wp_die();
+			if (!empty($coupon_code)) {
+				if ($coupon_data['type'] === 'promotion') {
+					$subscription_data['promotion_code'] = $code_id;
+				} else {
+					$subscription_data['discounts'] = [[
+						'coupon' => $coupon_code,
+					]];
 				}
-			} */
+			}
 
 			$subscriptions = $stripe->subscriptions->create($subscription_data);
 		} else {
+			$subtotal = payment_subtotal($stripe, $price_id, $quantity);
 
-			$base_total = payment_base_total($stripe, $price_id, $quantity);
-			/* 
-			$discount_amount = $base_total * ($coupon_data['discount'] / 100);
-			$total = max(0, $base_total - $discount_amount);
-			$total_in_cents = round($total * 100); */
-
-			// Check if the discount is not empty or zero
 			if ($has_coupon) {
-				$discount_amount = $base_total * ($coupon_data['discount'] / 100);
-				$total = max(0, $base_total - $discount_amount);
+				$discount_amount = $subtotal * ($coupon_data['discount'] / 100);
+				$total = max(0, $subtotal - $discount_amount);
 			} else {
-				// No discount applied
-				$total = $base_total;
+				$total = $subtotal;
 			}
 
 			$total_in_cents = round($total * 100);
 
-			// Create one-time payment with coupon support
 			$payment_data = [
 				'amount' => $total_in_cents,
 				'currency' => $price->currency,
 				'payment_method_types' => ['card'],
 				'payment_method' => $payment_method_id,
-				'customer' => $customer_id, // $customer_id
+				'customer' => $customer_id,
 				'confirm' => true,
 				'metadata' => [
-					'vb_user_id' => $user_id, //$user_id
-					'vb_user_name' => $user_name, //$user_name
-					'vb_user_email' => $user_email, //$user_email
+					'vb_user_id' => $user_id,
+					'vb_user_name' => $user_name,
+					'vb_user_email' => $user_email,
+					'product_price_id' => $price_id,
+					'product_quantity' => $quantity,
 				],
 				'error_on_requires_action' => true,
 			];
-
 			$paymentIntent = $stripe->paymentIntents->create($payment_data);
+
+			/* $invoice = $stripe->invoices->create([
+				'customer' => $customer_id, // Use the actual customer ID
+				'auto_advance' => true, // Automatically finalize and pay the invoice
+			]); */
+
+			if ($paymentIntent) {
+				wp_send_json_success([
+					'payment_intent_id' => $paymentIntent->id,
+					'currency' => $price->currency,
+					'subtotal' => $subtotal,
+					'total' => $total_in_cents,
+				]);
+			} else {
+				wp_send_json_error(['message' => 'Failed to create payment intent.']);
+			}
 		}
 
 		wp_send_json_success(['message' => 'Successfully saved card.']);
@@ -519,16 +448,8 @@ function payment_handler() {
 	wp_die();
 }
 
-function payment_base_total($stripe, $price_id, $quantity) {
-	$price = $stripe->prices->retrieve($price_id);
-	$unit_price = $price->unit_amount / 100;
-	$base_total = $unit_price * $quantity;
-	return $base_total;
-}
-
 add_action('wp_ajax_validate_coupon', 'validate_coupon_handler');
 add_action('wp_ajax_nopriv_validate_coupon', 'validate_coupon_handler');
-
 function validate_coupon_handler() {
 	$stripe = new \Stripe\StripeClient(STRIPE_SECRET_KEY);
 
@@ -543,7 +464,7 @@ function validate_coupon_handler() {
     }
 
     try {
-		$subtotal = payment_base_total($stripe, $price_id, $quantity);
+		$subtotal = payment_subtotal($stripe, $price_id, $quantity);
 
 		$coupon_data = get_coupon_discount($coupon_code);
 
@@ -567,9 +488,6 @@ function validate_coupon_handler() {
 
 	wp_die();
 }
-
-
-
 
 function get_coupon_discount($coupon_code) {
 
@@ -646,6 +564,57 @@ function get_coupon_discount($coupon_code) {
         wp_send_json_error(['message' => 'Error processing coupon: ' . $e->getMessage()]);
         wp_die();
     }
+}
+
+add_action('wp_ajax_get_payment_details', 'get_payment_details_handler');
+add_action('wp_ajax_nopriv_get_payment_details', 'get_payment_details_handler');
+function get_payment_details_handler() {
+	$stripe = new \Stripe\StripeClient(STRIPE_SECRET_KEY);
+	$input = json_decode(file_get_contents('php://input'), true);
+	$transaction_id = isset($input['transaction_id']) ? sanitize_text_field($input['transaction_id']) : null;
+
+	if (!$transaction_id) {
+        wp_send_json_error(['message' => 'User or transaction ID is not found']);
+        wp_die();
+    }
+
+    try {
+        $payment_intent = $stripe->paymentIntents->retrieve($transaction_id, []);
+		$currency = $payment_intent->currency;
+		$price_id = $payment_intent->metadata->product_price_id; 
+		$quantity = $payment_intent->metadata->product_quantity; 
+		$subtotal = payment_subtotal($stripe, $price_id, $quantity);
+		$subtotal_in_dollars = number_format($subtotal, 2);
+		$total_in_dollars = number_format($payment_intent->amount / 100, 2);
+		
+        $output = [
+            'currency' => $currency,
+            'subtotal' => $subtotal_in_dollars,
+            'total' => $total_in_dollars,
+        ];
+
+		wp_send_json_success($output);
+    } catch (\Exception $e) {
+		wp_send_json_error(['message' => $e->getMessage()]);
+    }
+}
+
+function payment_subtotal($stripe, $price_id, $quantity) {
+	$price = $stripe->prices->retrieve($price_id);
+	$unit_price = $price->unit_amount / 100;
+	$subtotal = $unit_price * $quantity;
+	return $subtotal;
+}
+
+function payment_total($stripe, $price_id, $quantity) {
+    $subtotal = payment_subtotal($stripe, $price_id, $quantity);
+    $payment_intent = $stripe->paymentIntents->create([
+        'amount' => $subtotal * 100,
+        'currency' => $payment_intent->currency,
+        'automatic_tax' => ['enabled' => true],
+    ]);
+    $total = $payment_intent->amount;
+    return $total / 100;
 }
 
 // Hook to add meta data when the order status is completed

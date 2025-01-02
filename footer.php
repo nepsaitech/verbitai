@@ -110,7 +110,7 @@
 	});
 </script> -->
 
-<script id="__bs_script__">//<![CDATA[
+<!-- <script id="__bs_script__">//<![CDATA[
   (function() {
     try {
       var script = document.createElement('script');
@@ -127,7 +127,7 @@
       console.error("Browsersync: could not append script tag", e);
     }
   })()
-//]]></script>
+//]]></script> -->
 
 </body>
 </html>
