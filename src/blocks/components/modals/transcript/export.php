@@ -23,9 +23,13 @@
                             <label for="export-format" class="text-sm leading-[21px] block mb-[3px]">Select the format</label>
                             <div class="relative">
                                 <span class="absolute left-[17px] top-2/4 -translate-y-2/4"><svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.23763 1.04004V3.44952C7.23763 3.77622 7.23763 3.93957 7.30121 4.06435C7.35714 4.17411 7.44637 4.26335 7.55614 4.31927C7.68092 4.38285 7.84427 4.38285 8.17096 4.38285H10.5804M7.23763 0.882812H4.2043C3.22421 0.882812 2.73416 0.882812 2.35981 1.07355C2.03053 1.24133 1.76281 1.50905 1.59504 1.83833C1.4043 2.21267 1.4043 2.70272 1.4043 3.68281V9.74948C1.4043 10.7296 1.4043 11.2196 1.59504 11.594C1.76281 11.9232 2.03053 12.191 2.35981 12.3587C2.73416 12.5495 3.22421 12.5495 4.2043 12.5495H7.93763C8.91772 12.5495 9.40777 12.5495 9.78211 12.3587C10.1114 12.191 10.3791 11.9232 10.5469 11.594C10.7376 11.2196 10.7376 10.7296 10.7376 9.74948V4.38281L7.23763 0.882812Z" stroke="#5148F9" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                                <select name="export-format" class="border border-[#71717F33] rounded-[8px] text-sm leading-[48px] text-[#031C34] h-[48px] pl-[37px] w-full js-export-format">
+                                <select id="file-format-selection" name="export-format" class="border border-[#71717F33] rounded-[8px] text-sm leading-[48px] text-[#031C34] h-[48px] pl-[37px] w-full">
                                     <option value="txt">Text document (.txt)</option>
                                     <option value="docx">Document Format (.docx)</option>
+                                    <option value="srt">SubRip Subtitle Format (.srt)</option>
+                                    <option value="web_vtt">Web Video Text Tracks (.web_vtt)</option>
+                                    <option value="sami">Synchronized Accessible Media Interchange (.sami)</option>
+                                    <option value="pdf">Portable Document Format (.pdf)</option>
                                 </select>
                                 <span class="flex items-center justify-center absolute right-[5px] top-2/4 -translate-y-2/4 bg-white w-[30px] h-[10px]"><svg width="7" height="5" viewBox="0 0 7 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.63937 4.06766L6.0299 1.67713C6.44987 1.25716 6.15243 0.539062 5.55849 0.539062H0.777445C0.183508 0.539062 -0.113938 1.25716 0.306039 1.67713L2.69656 4.06766C2.95691 4.32801 3.37902 4.32801 3.63937 4.06766Z" fill="#696969"/></svg></span>
                                 <span class="hidden absolute right-[32px] top-2/4 -translate-y-2/4 justify-center items-center bg-primary text-[8px] tracking-[10%] rounded-[40px] text-white text-center font-extrabold max-w-[29px] w-full min-h-[18px] leading-[9px] uppercase js-pro-tag">pro</span>
@@ -72,7 +76,7 @@
                                 $link_target = $link[ 'target' ] ? $link[ 'target' ] : '_self';
                                 ?>
 
-                                <a href="<?php echo esc_url( $link_url ); ?>" target="<?php echo esc_attr( $link_target ); ?>" class="relative block bg-primary !text-white text-center text-lg leading-[38px] py-[7px] px-5 rounded-[56px] font-bold max-w-[298px] w-full"><?php echo esc_html( $link_title ); ?></a>
+                                <a href="<?php echo esc_url( $link_url ); ?>" target="<?php echo esc_attr( $link_target ); ?>" id="file-export-btn" class="relative block bg-primary !text-white text-center text-lg leading-[38px] py-[7px] px-5 rounded-[56px] font-bold max-w-[298px] w-full"><?php echo esc_html( $link_title ); ?></a>
 
                             <?php endif; ?>
 

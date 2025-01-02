@@ -159,13 +159,55 @@ if (exportFormat) {
                 proTag.classList.remove('hidden');
                 proTag.classList.add('flex');
             } else {
+                console.log('this is other file types');
                 proTag.classList.add('flex');
                 proTag.classList.remove('hidden');
+                targetDiv?.classList.remove('hidden');
             }
         });
     }
 }
 
+const fileExportBtn = document.getElementById('file-export-btn') as HTMLButtonElement | null;
+fileExportBtn?.addEventListener("click", async () => {
+    console.log("Export button clicked");
+    const dropdown = document.getElementById("file-format-selection") as HTMLSelectElement;
+    
+    const selectedValue = dropdown?.value;
+  
+    console.log("Selected Value:", selectedValue);
+  
+    await exportSampleFile(selectedValue);
+});
+  
+const exportSampleFile = async (selectedValue: string) => {
+    const jobID = localStorage.getItem('vb_job_id') || '';
+
+    try {
+        const exportFileRes = await fetchWithAuth(`https://self-service-staging.verbit.co/api/v1/job/sample/download-transcription?job_id=${jobID}&caption_format=${selectedValue}`);
+
+        if (!exportFileRes.ok) {
+            console.error("Failed to fetch status:", exportFileRes.status);
+            return;
+        }
+
+        const fileBlob = await exportFileRes.blob();
+
+        const fileExtension = selectedValue.toLowerCase();
+        const fileName = `sample-transcription.${fileExtension}`;
+
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(fileBlob);
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        console.log("File exported successfully:", fileName);
+    } catch (error) {
+        console.error('Error loading video player:', error);
+    }
+};
 
 /**
  * Add a sticky class to the sidebar when the user scrolls past 160px.
@@ -236,7 +278,22 @@ const getSampleTranscript = async () => {
         const { html, title, media_url } =  embeddableWidgetData.content;
         if (embeddableWidgetEl) {
             embeddableWidgetEl.innerHTML = html;
+            
+            // Dynamically load the script
+            const script = document.createElement('script');
+            script.src = 'https://api-staging.verbit.co/assets/widget_v2.js';
+            script.type = 'text/javascript';
+            script.async = true;
+            script.onload = () => {
+                console.log('Verbit widget script loaded successfully.');
+            };
+            script.onerror = () => {
+                console.error('Failed to load Verbit widget script.');
+            };
+            document.body.appendChild(script);
         }
+
+        // how to readd this here 'verbit-widget', 'https://api-staging.verbit.co/assets/widget_v2.js';
 
         /* if (embeddableWidgetData.success) {
             console.log("embeddableWidgetData is here:", embeddableWidgetData);
@@ -256,7 +313,6 @@ const getSampleTranscript = async () => {
         console.error('Error loading video player:', error);
     }
 };
-
 
 const createYouTubeEmbed = (url: string) => {
     const iframe = document.createElement('iframe');
